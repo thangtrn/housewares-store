@@ -1,0 +1,10 @@
+# common
+node_modules/
+dist/
+
+.env
+
+# backend
+logs/
+
+# frontend
