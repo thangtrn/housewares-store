@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import tw from '~/lib/tw';
-import Search from './Search';
+import SearchBox from './SearchBox';
 import Action from './Action';
 
 const Header = () => {
@@ -14,14 +13,12 @@ const Header = () => {
                <Image width={46} height={46} src='/assets/logo.png' alt='logo-brand' />
                <span className='text-2xl font-bold text-[#8CB7F5]'>DMStore</span>
             </Link>
+
             {/* SEARCH */}
-            <div className='w-full max-w-lg'>
-               <Search />
-            </div>
+            <SearchBox />
+
             {/* ACTION */}
-            <div>
-               <Action />
-            </div>
+            <Action />
          </div>
       </header>
    );

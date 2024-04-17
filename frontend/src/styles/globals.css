@@ -18,3 +18,27 @@
    --orange-color: #ff9017;
    --red-color: #fa3434;
 }
+
+@layer base {
+   html ::-webkit-scrollbar {
+      border-radius: 0;
+      height: 8px;
+      width: 8px;
+   }
+
+   html ::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+   }
+
+   html ::-webkit-scrollbar-track {
+      background-color: transparent;
+      border-radius: 0;
+   }
+}
+
+@layer components {
+   .header__dropdown_shadow {
+      box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.2);
+   }
+}
