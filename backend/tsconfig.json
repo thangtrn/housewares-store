@@ -24,10 +24,6 @@
          "~/*": ["*"]
       }
    },
-   "ts-node": {
-      "swc": true,
-      "require": ["tsconfig-paths/register"]
-   },
    "include": ["src/**/*.ts", "src/**/*.json", ".env"],
    "exclude": ["node_modules", "src/logs"]
 }
