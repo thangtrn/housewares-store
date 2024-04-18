@@ -6,7 +6,7 @@ import Action from './Action';
 
 const Header = () => {
    return (
-      <header className='sticky inset-x-0 top-0 border-b border-b-[--gray-300-color] bg-white'>
+      <header className='sticky inset-x-0 top-0 z-30 border-b border-b-[--gray-300-color] bg-white'>
          <div className='container mx-auto flex h-16 items-center justify-between'>
             {/* LOGO */}
             <Link href='/' className='flex cursor-pointer items-center gap-2'>
