@@ -2,19 +2,19 @@ import React from 'react';
 import Category from './_components/Category';
 import EmblaCarousel from './_components/EmblaCarousel/EmblaCarousel';
 import BlockCategoryGroup from './_components/BlockCategoryGroup';
-import { SLIDES_IMAGE_URL, CATEGORY_BLOCK_DATA } from './_data';
+import { SLIDES_IMAGE_URL, CATEGORY_BLOCK_DATA, PRODUCT_LIST, CATEGORIES } from './_data';
 import ProductList from './_components/ProductList';
 
 const HomePage = () => {
    return (
       <>
          {/* CAROUSEL */}
-         <section className='section flex gap-4 px-4 py-5'>
+         <section className='section flex py-4'>
             {/* CATEGORY */}
-            <Category />
+            <Category categories={CATEGORIES} />
 
             {/* CAROUSEL */}
-            <div className='flex-1'>
+            <div className='min-h-[22.5rem] basis-9/12 pr-4'>
                <EmblaCarousel slides={SLIDES_IMAGE_URL} />
             </div>
          </section>
@@ -27,7 +27,9 @@ const HomePage = () => {
          />
 
          {/* LIST PRODUCT */}
-         <ProductList />
+         <ProductList title={PRODUCT_LIST.title} products={PRODUCT_LIST.products} />
+
+         <ProductList title='Sản phẩm bán chạy' products={PRODUCT_LIST.products} />
       </>
    );
 };

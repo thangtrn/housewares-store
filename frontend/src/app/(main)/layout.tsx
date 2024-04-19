@@ -7,7 +7,7 @@ const RootLayout: React.FC<LayoutProps> = ({ children }) => {
    return (
       <>
          <Header />
-         <main className='container mx-auto min-h-screen py-5'>{children}</main>
+         <main className='container min-h-screen py-5'>{children}</main>
          <Footer />
       </>
    );

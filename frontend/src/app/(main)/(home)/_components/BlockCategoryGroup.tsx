@@ -14,7 +14,7 @@ const BlockCategoryCard: React.FC<BlockCategoryCardProps> = ({ href, image, titl
          href={href}
          className='flex cursor-pointer items-center gap-2 p-2 outline outline-1 outline-[--gray-300-color] transition-colors hover:text-[--red-color] hover:drop-shadow-md'
       >
-         <div className='image-card h-24 w-24 flex-none'>
+         <div className='image-cover h-24 w-24 flex-none'>
             <Image width={512} height={512} src={image} alt='' />
          </div>
          <h4 className='font-medium'>{title}</h4>
@@ -28,16 +28,22 @@ interface BlockCategoryGroupProps {
    categoryItems: BlockCategoryCardProps[];
 }
 
-const BlockCategoryGroup: React.FC<BlockCategoryGroupProps> = ({ title, thumbnail, categoryItems }) => {
+const BlockCategoryGroup: React.FC<BlockCategoryGroupProps> = ({
+   title,
+   thumbnail,
+   categoryItems
+}) => {
    return (
       <section className='section flex overflow-hidden'>
-         <div className='relative flex aspect-square basis-72 items-center justify-center'>
-            <div className='image-card absolute inset-0'>
-               <Image width={600} height={600} src='/assets/image-group.png' alt='' />
+         <div className='relative flex aspect-square basis-3/12 items-center justify-center'>
+            <div className='image-cover absolute inset-0'>
+               <Image width={600} height={600} src={thumbnail} alt='' />
             </div>
-            <h3 className='z-10 w-4/5 text-wrap text-center text-lg font-medium drop-shadow-md'>{title}</h3>
+            <h3 className='z-10 w-4/5 text-wrap text-center text-lg font-medium drop-shadow-md'>
+               {title}
+            </h3>
          </div>
-         <div className='grid-row-2 grid flex-1 flex-grow grid-cols-2 gap-[1px] md:grid-cols-3 lg:grid-cols-4'>
+         <div className='grid-row-2 grid flex-grow basis-9/12 grid-cols-2 gap-[1px] md:grid-cols-3 lg:grid-cols-4'>
             {categoryItems?.map((item, index) => <BlockCategoryCard key={index} {...item} />)}
          </div>
       </section>

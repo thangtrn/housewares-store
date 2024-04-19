@@ -47,13 +47,23 @@
    .section {
       @apply border-item mb-8 rounded-md;
    }
-   .image-card {
+   .image-cover,
+   .image-contain {
       @apply h-full w-full overflow-hidden;
    }
-   .image-card > img {
+   .image-cover > img {
       @apply h-full w-full object-cover;
+   }
+   .image-contain > img {
+      @apply h-full w-full object-contain;
    }
 }
 
 @layer utilities {
+   .transition-ease {
+      @apply duration-250 transition-all ease-in-out;
+   }
+   .transition-linear {
+      @apply duration-250 transition-all ease-linear;
+   }
 }

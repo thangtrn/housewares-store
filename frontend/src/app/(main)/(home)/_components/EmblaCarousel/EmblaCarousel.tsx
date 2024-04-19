@@ -20,11 +20,11 @@ const EmblaCarousel: React.FC<EmblaCarouselProps> = ({ slides }) => {
 
    const { onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
 
-   const emblaVariable: Record<string, string> = {
-      '--slide-height': '22.5rem',
-      '--slide-spacing': '1rem',
-      '--slide-size': '100%'
-   };
+   const emblaVariable: String = [
+      '[--slide-height:22.5rem]',
+      '[--slide-spacing:1rem]',
+      '[--slide-size:100%]'
+   ].join(' ');
 
    const setAutoPlay = (type: string) => {
       // @ts-ignore: Thư viện Type lỗi
@@ -40,17 +40,22 @@ const EmblaCarousel: React.FC<EmblaCarouselProps> = ({ slides }) => {
 
    return (
       <div
-         className='relative'
-         style={emblaVariable}
+         className={tw('relative', emblaVariable)}
          onMouseEnter={() => setAutoPlay('stop')}
          onMouseLeave={() => setAutoPlay('play')}
       >
-         <div className='overflow-hidden' ref={emblaRef}>
+         <div className='overflow-hidden rounded' ref={emblaRef}>
             <div className='ml-[calc(var(--slide-spacing)*-1)] flex touch-pan-y'>
                {slides.map((slide, index) => (
                   <div className='flex-shrink-0 basis-full pl-[--slide-spacing]' key={index}>
-                     <div className='image-card h-[--slide-height] rounded-md bg-gray-500'>
-                        <Image src={slide} width={800} height={420} alt='123' className='h-full w-full object-cover' />
+                     <div className='image-cover h-[--slide-height] rounded bg-gray-500'>
+                        <Image
+                           src={slide}
+                           width={800}
+                           height={420}
+                           alt='123'
+                           className='h-full w-full object-cover'
+                        />
                      </div>
                   </div>
                ))}
@@ -87,7 +92,7 @@ const EmblaCarousel: React.FC<EmblaCarouselProps> = ({ slides }) => {
                   key={index}
                   onClick={() => onDotButtonClick(index)}
                   className={tw(
-                     'before:duration-250 flex h-8 w-8 touch-manipulation items-center justify-center before:block before:h-2 before:w-2 before:rounded-full before:bg-[--gray-300-color] before:shadow-lg before:transition-all before:ease-linear',
+                     'before:transition-ease flex h-8 w-8 touch-manipulation items-center justify-center before:block before:h-2 before:w-2 before:rounded-full before:bg-[--gray-300-color] before:shadow-lg',
                      index === selectedIndex && 'before:w-6 before:bg-[--gray-500-color]'
                   )}
                />

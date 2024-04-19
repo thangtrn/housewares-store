@@ -10,6 +10,9 @@ const config: Config = {
    ],
    theme: {
       extend: {
+         fontFamily: {
+            roboto: ['var(--font-roboto)', 'sans-serif']
+         },
          // override screen
          screens: {
             sm: '540px', // => @media (min-width: 640px) { ... }
@@ -19,6 +22,7 @@ const config: Config = {
             '2xl': '1320px' // => @media (min-width: 1536px) { ... }
          },
          container: {
+            center: true,
             padding: '1rem',
             screens: {
                default: '100%',
