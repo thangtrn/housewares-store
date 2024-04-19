@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
    return (
       <html lang='en'>
-         <body className={tw('${inter.className}', 'bg-[--gray-100-color]')}>
+         <body className={tw(inter.className, 'bg-[--gray-100-color]')}>
             <UiProvider>{children}</UiProvider>
          </body>
       </html>

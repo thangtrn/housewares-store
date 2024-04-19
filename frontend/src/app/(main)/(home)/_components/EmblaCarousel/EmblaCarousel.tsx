@@ -1,5 +1,4 @@
 'use client';
-import './embla.css';
 import React from 'react';
 import { useDotButton } from './EmblaCarouselDotButton';
 import { usePrevNextButtons } from './EmblaCarouselArrowButtons';
@@ -50,7 +49,7 @@ const EmblaCarousel: React.FC<EmblaCarouselProps> = ({ slides }) => {
             <div className='ml-[calc(var(--slide-spacing)*-1)] flex touch-pan-y'>
                {slides.map((slide, index) => (
                   <div className='flex-shrink-0 basis-full pl-[--slide-spacing]' key={index}>
-                     <div className='h-[--slide-height] w-full overflow-hidden rounded-md bg-gray-500'>
+                     <div className='image-card h-[--slide-height] rounded-md bg-gray-500'>
                         <Image src={slide} width={800} height={420} alt='123' className='h-full w-full object-cover' />
                      </div>
                   </div>

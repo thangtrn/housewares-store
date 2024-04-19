@@ -60,7 +60,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ href, content }) => {
 
 const Category = () => {
    return (
-      <ul className='w-64'>
+      <ul className='basis-64'>
          {data.map((category, index) => (
             <CategoryItem key={index} href={category.href} content={category.content} />
          ))}
