@@ -26,7 +26,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ _id, image, price, title, not
                </h3>
             </Link>
             <div className='mb-2 flex items-end justify-between font-sans text-base font-bold text-[--red-color]'>
-               <p>{formatPrice(price)}₫</p>
+               <p>{formatPrice(price)}</p>
                <CartButton />
             </div>
             {/* NOTE */}

@@ -1,6 +1,6 @@
 import React from 'react';
 import Category from './_components/Category';
-import EmblaCarousel from './_components/EmblaCarousel/EmblaCarousel';
+import EmblaCarousel from './_components/EmblaCarousel';
 import BlockCategoryGroup from './_components/BlockCategoryGroup';
 import { SLIDES_IMAGE_URL, CATEGORY_BLOCK_DATA, PRODUCT_LIST, CATEGORIES } from './_data';
 import ProductList from './_components/ProductList';

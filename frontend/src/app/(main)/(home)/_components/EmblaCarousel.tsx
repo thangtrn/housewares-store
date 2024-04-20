@@ -1,13 +1,12 @@
 'use client';
 import React from 'react';
-import { useDotButton } from './EmblaCarouselDotButton';
-import { usePrevNextButtons } from './EmblaCarouselArrowButtons';
+import tw from '~/lib/tw';
+import Image from 'next/image';
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
-import Image from 'next/image';
 import { Button } from '@nextui-org/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import tw from '~/lib/tw';
+import { useDotButton, usePrevNextButtons } from '~/hooks/carouselHook';
 
 interface EmblaCarouselProps {
    slides: string[];
