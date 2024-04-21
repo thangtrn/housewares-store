@@ -10,7 +10,7 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
    return (
-      <section className='section border-none'>
+      <section className='section border-none bg-transparent'>
          <ul className='grid grid-cols-5 gap-4'>
             {products.map((item) => (
                <ProductCard key={item._id} {...item} />

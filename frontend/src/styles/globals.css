@@ -45,11 +45,11 @@
       @apply border border-[--gray-300-color];
    }
    .section {
-      @apply border-item mb-8 rounded-md;
+      @apply border-item mb-8 rounded-md bg-white;
    }
    .image-cover,
    .image-contain {
-      @apply h-full w-full overflow-hidden;
+      @apply block h-full w-full overflow-hidden;
    }
    .image-cover > img {
       @apply h-full w-full object-cover;

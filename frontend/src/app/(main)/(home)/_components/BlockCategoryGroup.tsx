@@ -14,9 +14,9 @@ const BlockCategoryCard: React.FC<BlockCategoryCardProps> = ({ href, image, titl
          href={href}
          className='flex cursor-pointer items-center gap-2 p-2 outline outline-1 outline-[--gray-300-color] transition-colors hover:text-[--red-color] hover:drop-shadow-md'
       >
-         <div className='image-cover h-24 w-24 flex-none'>
+         <picture className='image-cover h-24 w-24 flex-none'>
             <Image width={512} height={512} src={image} alt='' />
-         </div>
+         </picture>
          <h4 className='font-medium'>{title}</h4>
       </Link>
    );
@@ -36,9 +36,9 @@ const BlockCategoryGroup: React.FC<BlockCategoryGroupProps> = ({
    return (
       <section className='section flex overflow-hidden'>
          <div className='relative flex aspect-square basis-3/12 items-center justify-center'>
-            <div className='image-cover absolute inset-0'>
+            <picture className='image-cover absolute inset-0'>
                <Image width={600} height={600} src={thumbnail} alt='' />
-            </div>
+            </picture>
             <h3 className='z-10 w-4/5 text-wrap text-center text-lg font-medium drop-shadow-md'>
                {title}
             </h3>

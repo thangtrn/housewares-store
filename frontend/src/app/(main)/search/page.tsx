@@ -13,7 +13,7 @@ const SearchPage = () => {
             <nav className='basis-2/12'>
                <Fillterbar />
             </nav>
-            <section className='basis-10/12'>
+            <div className='basis-10/12'>
                <div className='border-item mb-4 rounded-md bg-white p-2 text-xl'>
                   <h1 className='font-medium'>
                      Từ khoá: Đồ gia dụng{' '}
@@ -23,7 +23,7 @@ const SearchPage = () => {
                   </h1>
                </div>
                <ProductList products={PRODUCT_LIST.products} />
-            </section>
+            </div>
          </div>
       </>
    );

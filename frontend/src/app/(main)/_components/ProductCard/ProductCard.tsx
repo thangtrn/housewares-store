@@ -15,9 +15,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ _id, image, price, title, not
             className='transition-ease mt-2 flex justify-center p-2 group-hover:-translate-y-2 md:p-3'
             title={title}
          >
-            <div className='image-contain aspect-square max-h-48'>
+            <picture className='image-contain aspect-square max-h-48'>
                <Image width={600} height={600} src={image} alt='product-item' />
-            </div>
+            </picture>
          </Link>
          <div className='border-t border-[--gray-300-color] p-2 md:p-3'>
             <Link href={`/product/${_id}`} title={title}>
