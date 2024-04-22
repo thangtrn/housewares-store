@@ -11,6 +11,7 @@ import Table from './_components/Table';
 import ActionGroup from './_components/ActionGroup';
 import ProductCard from '~/app/(main)/_components/ProductCard/ProductCard';
 import { PRODUCT_LIST } from '../../(home)/_data';
+import EmptyStates from '~/components/EmptyStates';
 
 const ProductDetailPage: React.FC<ServerProps> = ({}) => {
    return (
@@ -57,8 +58,11 @@ const ProductDetailPage: React.FC<ServerProps> = ({}) => {
             <div className='basis-9/12'>
                <div className='card-section'>
                   <h1 className='mb-2 text-xl font-medium'>Mô tả sản phẩm</h1>
-                  <div>Trống</div>
-                  {/* <div dangerouslySetInnerHTML={{ __html: PRODUCT_DATA.description }} /> */}
+                  {PRODUCT_DATA.description ? (
+                     <div dangerouslySetInnerHTML={{ __html: PRODUCT_DATA.description }} />
+                  ) : (
+                     <EmptyStates subtitle='Mô tả sản phẩm trống' />
+                  )}
                </div>
             </div>
             <div className='basis-3/12'>
