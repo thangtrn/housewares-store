@@ -96,7 +96,7 @@ export const PRODUCT_LIST = {
    products: [
       {
          _id: 1,
-         title: 'Iphone 12 promax',
+         title: 'Iphone 12 promax Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ad dicta voluptates placeat excepturi, amet qui incidunt temporibus porro rem ea recusandae minima id debitis, dolorem consequuntur quod eos facilis numquam?',
          price: 20000000,
          note: 'Giao hàng tận nơi',
          image: '/assets/product-image.png'

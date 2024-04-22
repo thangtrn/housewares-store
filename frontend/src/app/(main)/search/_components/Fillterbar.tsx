@@ -44,7 +44,7 @@ const Fillterbar = () => {
    const [priceValue, setPriceValue] = useState<number[]>([0, 20000000]);
 
    return (
-      <div className={'section sticky top-[calc(64px+20px)] flex flex-col gap-2 bg-white p-3'}>
+      <div className={'section sticky top-[calc(64px+16px)] flex flex-col gap-2 bg-white p-3'}>
          <BlockFilter title='Khoảng giá' border>
             <div className='mb-2 flex items-center'>
                <DisplayPrice price={priceValue[0]} />

@@ -1,8 +1,11 @@
+import '~/styles/globals.css';
+
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
-import '~/styles/globals.css';
-import UiProvider from '~/provider/UiProvider';
+import NextTopLoader from 'nextjs-toploader';
+
 import tw from '~/lib/tw';
+import UiProvider from '~/provider/UiProvider';
 
 const roboto = Roboto({
    subsets: ['latin'],
@@ -23,6 +26,7 @@ export default function RootLayout({
    return (
       <html lang='en'>
          <body className={tw(roboto.variable, 'font-roboto bg-[--gray-100-color]')}>
+            <NextTopLoader color='var(--blue-color)' height={2} />
             <UiProvider>{children}</UiProvider>
          </body>
       </html>

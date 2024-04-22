@@ -47,9 +47,12 @@
    .section {
       @apply border-item mb-8 rounded-md bg-white;
    }
+   .card-section {
+      @apply border-item rounded-md bg-white p-4;
+   }
    .image-cover,
    .image-contain {
-      @apply block h-full w-full overflow-hidden;
+      @apply inline-block h-full w-full overflow-hidden;
    }
    .image-cover > img {
       @apply h-full w-full object-cover;
