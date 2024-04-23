@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
-import tw from '~/lib/tw';
+import tw, { createVariables } from '~/lib/tw';
 
 type ThumbProps = {
    selected: boolean;
@@ -63,12 +63,10 @@ const EmblaCarousel: React.FC<EmblaCarouselProps> = ({ slides }) => {
       emblaMainApi.on('reInit', onSelect);
    }, [emblaMainApi, onSelect]);
 
-   const emblaMainVariable: string = ['[--slide-spacing:0.6rem]'].join(' ');
-
-   const emblaThumbVariable: string = ['[--thumbs-slide-spacing:0.6rem]'].join(' ');
+   const variables = createVariables('[--slide-spacing:0.6rem]', '[--thumbs-slide-spacing:0.6rem]');
 
    return (
-      <div className={tw(emblaMainVariable, 'w-full')}>
+      <div className={tw(variables, 'w-full')}>
          <div className='border-item overflow-hidden rounded-md' ref={emblaMainRef}>
             <div className='ml-[calc(var(--slide-spacing)*-1)] flex touch-pan-y'>
                {slides.map((slide, index) => (
@@ -81,7 +79,7 @@ const EmblaCarousel: React.FC<EmblaCarouselProps> = ({ slides }) => {
             </div>
          </div>
 
-         <div className={tw(emblaThumbVariable, 'mt-[--thumbs-slide-spacing]')}>
+         <div className='mt-[--thumbs-slide-spacing]'>
             <div className='overflow-hidden' ref={emblaThumbsRef}>
                <div className='ml-[calc(var(--thumbs-slide-spacing)*-1)] flex'>
                   {slides.map((image, index) => (

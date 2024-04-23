@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import tw from '~/lib/tw';
+import tw, { createVariables } from '~/lib/tw';
 import Image from 'next/image';
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -19,27 +19,29 @@ const EmblaCarousel: React.FC<EmblaCarouselProps> = ({ slides }) => {
 
    const { onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
 
-   const emblaVariable: String = [
+   const variables = createVariables(
       '[--slide-height:22.5rem]',
       '[--slide-spacing:1rem]',
       '[--slide-size:100%]'
-   ].join(' ');
+   );
 
    const setAutoPlay = (type: string) => {
       // @ts-ignore: Thư viện Type lỗi
-      const { stop, play } = emblaApi?.plugins(Autoplay).autoplay;
+      const autoplay = emblaApi?.plugins(Autoplay).autoplay;
 
       if (type === 'stop') {
-         stop?.();
+         // @ts-ignore: Thư viện Type lỗi
+         autoplay?.stop?.();
       }
       if (type === 'play') {
-         play?.();
+         // @ts-ignore: Thư viện Type lỗi
+         autoplay?.play?.();
       }
    };
 
    return (
       <div
-         className={tw('relative', emblaVariable)}
+         className={tw('relative', variables)}
          onMouseEnter={() => setAutoPlay('stop')}
          onMouseLeave={() => setAutoPlay('play')}
       >
