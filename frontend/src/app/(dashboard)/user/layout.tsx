@@ -4,15 +4,13 @@ import Header from '../_components/Header';
 import tw, { createVariables } from '~/lib/tw';
 
 const RootLayout: React.FC<LayoutProps> = ({ children }) => {
-   const variables = createVariables('[--header-height:56px]');
+   const variables = createVariables('[--header-height:56px]', '[--sidebar-width:256px]');
 
    return (
-      <div className={variables}>
+      <div className={tw(variables)}>
          <Header />
-         <div className='flex min-h-screen w-full'>
-            <Sidebar />
-            <div className='flex-1'>{children}</div>
-         </div>
+         <Sidebar />
+         <main className='ml-[--sidebar-width] min-h-screen px-3 py-4'>{children}</main>
       </div>
    );
 };
