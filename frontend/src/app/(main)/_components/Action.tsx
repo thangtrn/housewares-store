@@ -1,19 +1,23 @@
 'use client';
-import { Badge, Button } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import ButtonUI from '~/components/ButtonUI';
 
 const Action = () => {
+   const router = useRouter();
+
    return (
       <div className='flex items-center gap-4'>
          <Badge color='danger' content={5} shape='circle'>
-            <Button isIconOnly size='md' radius='sm' variant='light'>
+            <ButtonUI isIconOnly size='md' radius='sm' variant='light'>
                <ShoppingCart className='fill-current' size={24} />
-            </Button>
+            </ButtonUI>
          </Badge>
-         <Button color='primary' radius='sm'>
+         <ButtonUI color='primary' radius='sm' onClick={() => router.push('/user')}>
             Đăng nhập
-         </Button>
+         </ButtonUI>
       </div>
    );
 };

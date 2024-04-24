@@ -17,7 +17,7 @@ const ProductDetailPage: React.FC<ServerProps> = ({}) => {
    return (
       <>
          <Breadcrumb data={['Sản phẩm', 'Áo thun']} className='mb-4' />
-         <section className='section mb-4 flex gap-4 p-4'>
+         <section className='section-card mb-4 flex gap-4'>
             <div className='flex basis-4/12 md:border-r md:border-[--gray-300-color] md:pr-4'>
                <EmblaCarousel slides={PRODUCT_DATA.images} />
             </div>
@@ -56,7 +56,7 @@ const ProductDetailPage: React.FC<ServerProps> = ({}) => {
          </section>
          <section className='flex gap-4'>
             <div className='basis-9/12'>
-               <div className='card-section'>
+               <div className='section-card'>
                   <h1 className='mb-2 text-xl font-medium'>Mô tả sản phẩm</h1>
                   {PRODUCT_DATA.description ? (
                      <div dangerouslySetInnerHTML={{ __html: PRODUCT_DATA.description }} />
@@ -66,7 +66,7 @@ const ProductDetailPage: React.FC<ServerProps> = ({}) => {
                </div>
             </div>
             <div className='basis-3/12'>
-               <div className='card-section'>
+               <div className='section-card'>
                   {/* sticky top-[calc(64px+16px)] */}
                   <h1 className='mb-2 text-xl font-medium'>Sản phẩm tương tự</h1>
                   <ul className='space-y-4'>

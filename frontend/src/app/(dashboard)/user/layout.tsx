@@ -10,7 +10,7 @@ const RootLayout: React.FC<LayoutProps> = ({ children }) => {
       <div className={tw(variables)}>
          <Header />
          <Sidebar />
-         <main className='ml-[--sidebar-width] min-h-screen px-3 py-4'>{children}</main>
+         <main className='ml-[--sidebar-width] min-h-screen p-4'>{children}</main>
       </div>
    );
 };

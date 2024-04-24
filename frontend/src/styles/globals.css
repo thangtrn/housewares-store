@@ -47,7 +47,7 @@
    .section {
       @apply border-item mb-8 rounded-md bg-white;
    }
-   .card-section {
+   .section-card {
       @apply border-item rounded-md bg-white p-4;
    }
    .image-cover,

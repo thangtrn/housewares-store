@@ -1,8 +1,10 @@
 import '~/styles/globals.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
+import { ToastContainer, toast } from 'react-toastify';
 
 import tw from '~/lib/tw';
 import UiProvider from '~/provider/UiProvider';
@@ -26,6 +28,18 @@ export default function RootLayout({
    return (
       <html lang='en'>
          <body className={tw(roboto.variable, 'font-roboto bg-[--gray-100-color]')}>
+            <ToastContainer
+               position='bottom-left'
+               autoClose={3000}
+               hideProgressBar={false}
+               newestOnTop={false}
+               closeOnClick
+               pauseOnFocusLoss
+               draggable
+               pauseOnHover
+               theme='light'
+               className='select-none'
+            />
             <NextTopLoader color='var(--blue-color)' height={2} />
             <UiProvider>{children}</UiProvider>
          </body>
