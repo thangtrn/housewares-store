@@ -1,8 +1,36 @@
-import { Button, ButtonProps } from '@nextui-org/react';
+import { Button, ButtonProps, Tooltip, TooltipProps } from '@nextui-org/react';
 import React from 'react';
 import tw from '~/lib/tw';
 
-const ButtonUI: React.FC<ButtonProps> = ({ children, className, color = 'default', ...rest }) => {
+type ButtonUI = {
+   tooltip?: string;
+   tooltipProp?: TooltipProps;
+};
+
+const ButtonUI: React.FC<ButtonProps & ButtonUI> = ({
+   children,
+   tooltip,
+   className,
+   color = 'default',
+   tooltipProp,
+   ...rest
+}) => {
+   if (tooltip) {
+      return (
+         <Tooltip
+            showArrow={true}
+            content={tooltip}
+            radius='none'
+            className='z-40 rounded'
+            closeDelay={0}
+            {...tooltipProp}
+         >
+            <Button className={tw('rounded', className)} color={color} {...rest}>
+               {children}
+            </Button>
+         </Tooltip>
+      );
+   }
    return (
       <Button className={tw('rounded', className)} color={color} {...rest}>
          {children}
