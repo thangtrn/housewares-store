@@ -1,13 +1,16 @@
+import MetadataKeys from '~/utils/metadata.key';
 
+export interface IController {
+   basePath: string;
+   middlewares: any[];
+}
 
-// const Controller = (basePath:string):ClassDecorator =>(target)=>{
-
-import MetadataKeys from "~/utils/metadata.key"
-
-// }
-
-export default function Controller(basePath:string = ''):ClassDecorator{
-    return (target)=>{
-        Reflect.defineMetadata(MetadataKeys.BASE_PATH,basePath,target)
-    }
+export default function Controller(basePath: string = '', ...middlewares: any[]): ClassDecorator {
+   return (target) => {
+      const controller: IController = {
+         basePath: basePath,
+         middlewares: middlewares
+      };
+      Reflect.defineMetadata(MetadataKeys.BASE_PATH, controller, target);
+   };
 }

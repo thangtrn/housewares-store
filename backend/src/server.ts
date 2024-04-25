@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import 'reflect-metadata';
 import 'express-async-errors';
 import express, { Application } from 'express';
 import morgan from 'morgan';
@@ -11,6 +11,8 @@ import connectMongodb from './config/db';
 import controllerRegister from './utils/controllerRegister';
 import UserController from './controllers/user.controller';
 import { handleError } from './middlewares/handleError';
+import cookie from 'cookie-parser';
+import AuthController from './controllers/auth.controller';
 
 class App {
    protected app: Application;
@@ -30,8 +32,8 @@ class App {
    }
 
    private connection = async () => {
-      await connectMongodb()
-   }
+      await connectMongodb();
+   };
 
    private initializeMiddlewares = () => {
       this.app.use(morgan(LOG_FORMAT));
@@ -39,19 +41,20 @@ class App {
       this.app.use(helmet());
       this.app.use(compression());
       this.app.use(express.json());
+      this.app.use(cookie());
       this.app.use(express.urlencoded({ extended: true }));
       this.app.use(cookieParser());
    };
 
    private initializeRoutes = () => {
-      controllerRegister(this.app, [UserController]);
+      controllerRegister(this.app, [AuthController, UserController]);
    };
 
    private initializeSwagger = () => {};
 
    private initializeErrorHandling = () => {
-      this.app.use(handleError.NotFound)
-      this.app.use(handleError.InternalServer)
+      this.app.use(handleError.NotFound);
+      this.app.use(handleError.InternalServer);
    };
 
    public listen = () => {
