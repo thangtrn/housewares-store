@@ -1,3 +1,5 @@
+import 'reflect-metadata'
+import 'express-async-errors';
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -5,7 +7,10 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from '~/config';
-import { logger, stream } from '~/utils/logger';
+import connectMongodb from './config/db';
+import controllerRegister from './utils/controllerRegister';
+import UserController from './controllers/user.controller';
+import { handleError } from './middlewares/handleError';
 
 class App {
    protected app: Application;
@@ -17,14 +22,19 @@ class App {
       this.env = NODE_ENV || 'development';
       this.port = PORT || 5000;
 
+      this.connection();
       this.initializeMiddlewares();
       this.initializeRoutes();
       this.initializeSwagger();
       this.initializeErrorHandling();
    }
 
+   private connection = async () => {
+      await connectMongodb()
+   }
+
    private initializeMiddlewares = () => {
-      this.app.use(morgan(LOG_FORMAT, { stream }));
+      this.app.use(morgan(LOG_FORMAT));
       this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
       this.app.use(helmet());
       this.app.use(compression());
@@ -34,21 +44,22 @@ class App {
    };
 
    private initializeRoutes = () => {
-      this.app.get('/', (req, res) => {
-         res.send('Hallo');
-      });
+      controllerRegister(this.app, [UserController]);
    };
 
    private initializeSwagger = () => {};
 
-   private initializeErrorHandling = () => {};
+   private initializeErrorHandling = () => {
+      this.app.use(handleError.NotFound)
+      this.app.use(handleError.InternalServer)
+   };
 
    public listen = () => {
       this.app.listen(this.port, () => {
-         logger.info(`=================================`);
-         logger.info(`======= ENV: ${this.env} =======`);
-         logger.info(`🚀 App listening on the port ${this.port}`);
-         logger.info(`=================================`);
+         console.log(`=================================`);
+         console.log(`======= ENV: ${this.env} =======`);
+         console.log(`🚀 App listening on the port ${this.port}`);
+         console.log(`=================================`);
       });
    };
 }
