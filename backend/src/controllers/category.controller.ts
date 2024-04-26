@@ -1,26 +1,63 @@
 import { Request, Response } from 'express';
 import { Controller, Delete, Get, Post, Put } from '~/decorators';
+import uploader from '~/middlewares/uploader';
+import CategoryRepository from '~/repositories/category.repository';
+import ImageRepository from '~/repositories/image.repository';
+import OkResponse from '~/utils/response/response';
 
 @Controller('/category')
 class CategoryController {
+   private categoryRepo = new CategoryRepository();
+   private imageRepo = new ImageRepository();
+
    @Get('/')
-   getAllCategory(req: Request, res: Response) {
-      res.send('/');
+   async getAllCategory(req: Request, res: Response) {
+      const result = await this.categoryRepo.getAllCategory();
+      return OkResponse(res, { metadata: result });
    }
 
-   @Post('/')
-   createCagetory(req: Request, res: Response) {
-      res.send('/');
+   @Post('/', uploader.single('image'))
+   async createCagetory(req: Request, res: Response) {
+      const name = req.body.name;
+      const image = req.file;
+
+      const imageResult = await this.imageRepo.createImage({
+         imageUrl: image.path,
+         publicId: image.filename
+      });
+
+      const categoryResult = await this.categoryRepo.createCategory({
+         name,
+         image: imageResult._id
+      });
+
+      return OkResponse(res, { metadata: categoryResult });
    }
 
    @Put('/')
-   updateCategory(req: Request, res: Response) {
-      res.send('/');
+   async updateCategory(req: Request, res: Response) {
+      const name = req.body.name;
+      const image = req.file;
+
+      const imageResult = await this.imageRepo.createImage({
+         imageUrl: image.path,
+         publicId: image.filename
+      });
+
+      const categoryResult = await this.categoryRepo.createCategory({
+         name,
+         image: imageResult._id
+      });
+
+      return OkResponse(res, { metadata: categoryResult });
    }
 
-   @Delete('/')
-   deleteCategory(req: Request, res: Response) {
-      res.send('/');
+   @Delete('/:id')
+   async deleteCategory(req: Request, res: Response) {
+      const _id = req.params.id;
+
+      const result = await this.categoryRepo.deleteCategory(_id);
+      return OkResponse(res, { metadata: result });
    }
 }
 

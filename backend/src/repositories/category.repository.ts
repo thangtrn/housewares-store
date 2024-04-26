@@ -1,10 +1,18 @@
 import Category from '~/models/category.model';
 
 class CategoryRepository {
-   category = Category;
+   async getAllCategory() {
+      return await Category.find().populate('image');
+   }
 
-   getAllCategory() {
-      this.category.find();
+   async createCategory({ name, image }) {
+      const category = await Category.create({ name, image });
+      const result = await category.populate('image');
+      return result;
+   }
+
+   async deleteCategory(_id) {
+      return await Category.deleteOne({ _id });
    }
 }
 

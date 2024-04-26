@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const imageSchema = new Schema(
    {
       imageUrl: String,
-      cloudinaryId: String,
+      publicId: String,
       default: {
          type: Boolean,
          default: false
@@ -15,4 +15,6 @@ const imageSchema = new Schema(
    }
 );
 
-export default mongoose.model('Image', imageSchema);
+const Image = mongoose.model('Image', imageSchema);
+
+export default Image;

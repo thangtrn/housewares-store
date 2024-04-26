@@ -16,6 +16,7 @@ import UserController from '~/controllers/user.controller';
 import cookie from 'cookie-parser';
 import AuthController from '~/controllers/auth.controller';
 import ProductController from '~/controllers/product.controller';
+import CategoryController from './controllers/category.controller';
 
 class App {
    protected app: Application;
@@ -50,7 +51,12 @@ class App {
    };
 
    private initializeRoutes = () => {
-      controllerRegister(this.app, [AuthController, UserController, ProductController]);
+      controllerRegister(this.app, [
+         AuthController,
+         UserController,
+         CategoryController,
+         ProductController
+      ]);
    };
 
    private initializeSwagger = () => {};
