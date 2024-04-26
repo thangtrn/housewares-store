@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { Controller, Post } from '~/decorators';
 
-@Controller('/auth')
-class AuthController {
-   @Post('/login')
+@Controller('/')
+class bController {
+   @Post('/')
    login(req: Request, res: Response) {
-      res.send('/login');
+      res.send('/');
    }
 }
 
-export default AuthController;
+export default bController;

@@ -7,7 +7,7 @@ function controllerRegister(app: Application, controllers: any[]) {
    const info: Array<{ api: string; handler: string }> = [];
    controllers.forEach((controller) => {
       const controllerInstance: { [handlerName: string]: Handler } = new controller();
-      let baseController: IController = Reflect.getMetadata(MetadataKeys.BASE_PATH, controller);
+      const baseController: IController = Reflect.getMetadata(MetadataKeys.BASE_PATH, controller);
 
       const routers: IRouter[] = Reflect.getMetadata(MetadataKeys.ROUTER, controller);
       const expresRouter = express.Router();
@@ -24,8 +24,8 @@ function controllerRegister(app: Application, controllers: any[]) {
          });
       });
       app.use('/api' + baseController.basePath, expresRouter);
-      console.table(info);
    });
+   console.table(info);
 }
 
 export default controllerRegister;

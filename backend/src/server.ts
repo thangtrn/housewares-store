@@ -6,13 +6,16 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
+
 import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from '~/config';
-import connectMongodb from './config/db';
-import controllerRegister from './utils/controllerRegister';
-import UserController from './controllers/user.controller';
-import { handleError } from './middlewares/handleError';
+import connectMongodb from '~/config/db';
+import controllerRegister from '~/utils/controllerRegister';
+import { handleError } from '~/middlewares/handleError';
+
+import UserController from '~/controllers/user.controller';
 import cookie from 'cookie-parser';
-import AuthController from './controllers/auth.controller';
+import AuthController from '~/controllers/auth.controller';
+import ProductController from '~/controllers/product.controller';
 
 class App {
    protected app: Application;
@@ -47,7 +50,7 @@ class App {
    };
 
    private initializeRoutes = () => {
-      controllerRegister(this.app, [AuthController, UserController]);
+      controllerRegister(this.app, [AuthController, UserController, ProductController]);
    };
 
    private initializeSwagger = () => {};

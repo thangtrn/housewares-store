@@ -4,11 +4,11 @@ import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import { format } from 'date-fns';
 
 export class handleError {
-   public static NotFound = (req: Request, res: Response, next: NextFunction) => {
+   static NotFound = (req: Request, res: Response, next: NextFunction) => {
       next(new NotFoundException(`[${req.method}] Not found resource: ${req.url}`));
    };
 
-   public static InternalServer = (
+   static InternalServer = (
       err: ErrorException,
       req: Request,
       res: Response,
@@ -18,7 +18,7 @@ export class handleError {
       console.table([
          {
             Name: err?.name,
-            'Status code': err?.statusCode,
+            'Status code': err?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
             Time: format(new Date(), 'hh:mm:ss dd/MM/yyyy'),
             Message: err?.message
          }

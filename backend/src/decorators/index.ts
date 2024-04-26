@@ -1,3 +1,3 @@
-export {default as Controller} from './Controller'
-export * from './Controller'
-export * from './Methods'
+export { default as Controller } from './Controller';
+export * from './Controller';
+export * from './Methods';
