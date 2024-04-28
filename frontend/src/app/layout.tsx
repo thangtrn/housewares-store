@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import tw from '~/lib/tw';
 import UiProvider from '~/provider/UiProvider';
+import QueryProvider from '~/provider/QueryProvider';
 
 const roboto = Roboto({
    subsets: ['latin'],
@@ -28,20 +29,22 @@ export default function RootLayout({
    return (
       <html lang='en'>
          <body className={tw(roboto.variable, 'font-roboto bg-[--gray-100-color]')}>
-            <ToastContainer
-               position='bottom-left'
-               autoClose={3000}
-               hideProgressBar={false}
-               newestOnTop={false}
-               closeOnClick
-               pauseOnFocusLoss
-               draggable
-               pauseOnHover
-               theme='light'
-               className='select-none'
-            />
-            <NextTopLoader color='var(--blue-color)' height={2} />
-            <UiProvider>{children}</UiProvider>
+            <QueryProvider>
+               <ToastContainer
+                  position='bottom-left'
+                  autoClose={3000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme='light'
+                  className='select-none'
+               />
+               <NextTopLoader color='var(--blue-color)' height={2} />
+               <UiProvider>{children}</UiProvider>
+            </QueryProvider>
          </body>
       </html>
    );

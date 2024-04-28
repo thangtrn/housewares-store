@@ -17,6 +17,7 @@ import cookie from 'cookie-parser';
 import AuthController from '~/controllers/auth.controller';
 import ProductController from '~/controllers/product.controller';
 import CategoryController from './controllers/category.controller';
+import OrderController from './controllers/order.controller';
 
 class App {
    protected app: Application;
@@ -55,7 +56,8 @@ class App {
          AuthController,
          UserController,
          CategoryController,
-         ProductController
+         ProductController,
+         OrderController
       ]);
    };
 

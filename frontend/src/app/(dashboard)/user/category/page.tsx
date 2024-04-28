@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import {
    Table,
    TableHeader,
@@ -7,23 +7,49 @@ import {
    TableBody,
    TableRow,
    TableCell,
-   Pagination
+   Pagination,
+   useDisclosure,
+   Spinner
 } from '@nextui-org/react';
 import { CirclePlus, Eye, RotateCcw, Search, SquarePen, Trash2 } from 'lucide-react';
 import InputUI from '~/components/InputUI';
 import ButtonUI from '~/components/ButtonUI';
-import {
-   Modal,
-   ModalContent,
-   ModalHeader,
-   ModalBody,
-   ModalFooter,
-   Button,
-   useDisclosure
-} from '@nextui-org/react';
+import ModalUI, { ModalType } from '~/components/ModalUI';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCategory } from './_fetch';
+import { ICategory } from '~/interfaces/schema.interfaces';
+import EmptyStates from '~/components/EmptyStates';
 
 const CategoryPage = () => {
+   const {
+      data = [],
+      isLoading,
+      isError,
+      isRefetching,
+      refetch
+   } = useQuery<ICategory[]>({
+      queryKey: ['/category'],
+      queryFn: fetchCategory
+   });
+   console.log('🚀 ~ CategoryPage ~ isLoading:', isLoading, isRefetching);
+
+   const [modalType, setModalType] = useState<ModalType>(null);
    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+   const handleOpen = (modalType?: ModalType) => {
+      setModalType(modalType);
+      onOpen();
+   };
+
+   const renderModal = (modalType: ModalType) => {
+      switch (modalType) {
+         case 'create':
+            return <div>123123</div>;
+
+         default:
+            return null;
+      }
+   };
 
    return (
       <>
@@ -33,12 +59,19 @@ const CategoryPage = () => {
                   startContent={<RotateCcw size={16} />}
                   color='primary'
                   className='bg-[--green-color]'
-                  onClick={onOpen}
+                  onClick={() => {
+                     console.log('12123');
+                     refetch();
+                  }}
                >
                   Làm mới
                </ButtonUI>
 
-               <ButtonUI startContent={<CirclePlus size={16} />} color='primary'>
+               <ButtonUI
+                  startContent={<CirclePlus size={16} />}
+                  color='primary'
+                  onClick={() => handleOpen('create')}
+               >
                   Làm mới
                </ButtonUI>
             </div>
@@ -74,84 +107,71 @@ const CategoryPage = () => {
                <TableColumn>Hình ảnh</TableColumn>
                <TableColumn width={136}>Thao tác</TableColumn>
             </TableHeader>
-            <TableBody>
-               <TableRow key='1'>
-                  <TableCell>Tony Reichert</TableCell>
-                  <TableCell>CEO</TableCell>
-                  <TableCell>Active</TableCell>
-                  <TableCell>
-                     <div className='flex gap-2'>
-                        <ButtonUI
-                           tooltip='Xem chi tiết'
-                           isIconOnly
-                           color='primary'
-                           className='bg-yellow-400'
-                           size='sm'
-                        >
-                           <Eye size={18} />
-                        </ButtonUI>
+            <TableBody
+               items={data}
+               isLoading={isLoading || isRefetching}
+               loadingContent={<Spinner label='Loading...' />}
+               emptyContent={<EmptyStates />}
+            >
+               {(item) => (
+                  <TableRow key={item?._id}>
+                     <TableCell>Tony Reichert</TableCell>
+                     <TableCell>CEO</TableCell>
+                     <TableCell>Active</TableCell>
+                     <TableCell>
+                        <div className='flex gap-2'>
+                           <ButtonUI
+                              tooltip='Xem chi tiết'
+                              isIconOnly
+                              color='primary'
+                              className='bg-yellow-400'
+                              size='sm'
+                           >
+                              <Eye size={18} />
+                           </ButtonUI>
 
-                        <ButtonUI
-                           isIconOnly
-                           tooltip='Sửa'
-                           color='primary'
-                           className='bg-[--orange-color]'
-                           size='sm'
-                        >
-                           <SquarePen size={18} />
-                        </ButtonUI>
+                           <ButtonUI
+                              isIconOnly
+                              tooltip='Sửa'
+                              color='primary'
+                              className='bg-[--orange-color]'
+                              size='sm'
+                           >
+                              <SquarePen size={18} />
+                           </ButtonUI>
 
-                        <ButtonUI
-                           isIconOnly
-                           tooltip='Xoá'
-                           color='primary'
-                           className='bg-[--red-color]'
-                           size='sm'
-                        >
-                           <Trash2 size={18} />
-                        </ButtonUI>
-                     </div>
-                  </TableCell>
-               </TableRow>
+                           <ButtonUI
+                              isIconOnly
+                              tooltip='Xoá'
+                              color='primary'
+                              className='bg-[--red-color]'
+                              size='sm'
+                           >
+                              <Trash2 size={18} />
+                           </ButtonUI>
+                        </div>
+                     </TableCell>
+                  </TableRow>
+               )}
             </TableBody>
          </Table>
 
-         <Modal placement='center' isOpen={isOpen} onOpenChange={onOpenChange}>
-            <ModalContent>
-               {(onClose) => (
-                  <>
-                     <ModalHeader className='flex flex-col gap-1'>Modal Title</ModalHeader>
-                     <ModalBody>
-                        <p>
-                           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar
-                           risus non risus hendrerit venenatis. Pellentesque sit amet hendrerit
-                           risus, sed porttitor quam.
-                        </p>
-                        <p>
-                           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar
-                           risus non risus hendrerit venenatis. Pellentesque sit amet hendrerit
-                           risus, sed porttitor quam.
-                        </p>
-                        <p>
-                           Magna exercitation reprehenderit magna aute tempor cupidatat consequat
-                           elit dolor adipisicing. Mollit dolor eiusmod sunt ex incididunt cillum
-                           quis. Velit duis sit officia eiusmod Lorem aliqua enim laboris do dolor
-                           eiusmod. Et mollit incididunt nisi consectetur esse laborum eiusmod
-                           pariatur proident Lorem eiusmod et. Culpa deserunt nostrud ad veniam.
-                        </p>
-                     </ModalBody>
-                     <ModalFooter>
-                        <Button color='danger' variant='light' onPress={onClose}>
-                           Close
-                        </Button>
-                        <Button color='primary' onPress={onClose}>
-                           Action
-                        </Button>
-                     </ModalFooter>
-                  </>
-               )}
-            </ModalContent>
-         </Modal>
+         <ModalUI
+            headerTitle={{
+               view: 'Chi tiết danh mục',
+               create: 'Tạo danh mục',
+               edit: 'Cập nhật danh mục',
+               delete: 'Xoá danh mục'
+            }}
+            modalType={modalType}
+            isOpen={isOpen}
+            onOpenChange={(isOpen) => {
+               onOpenChange();
+               isOpen === false && setModalType(undefined);
+            }}
+         >
+            {renderModal}
+         </ModalUI>
       </>
    );
 };

@@ -4,7 +4,7 @@ import { NotFoundException } from '~/utils/response';
 
 class CategoryRepository {
    async getAllCategory() {
-      return await Category.find().populate('image');
+      return await Category.find()?.populate('image');
    }
 
    async createCategory({ name, image }) {

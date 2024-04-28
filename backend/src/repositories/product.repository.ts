@@ -4,7 +4,19 @@ import { NotFoundException } from '~/utils/response';
 
 class ProductRepository {
    async getAllProduct() {
-      const products = await Product.find({});
+      const products = await Product.find({})
+         ?.populate({
+            path: 'images',
+            model: 'Image'
+         })
+         ?.populate({
+            path: 'category',
+            model: 'Category',
+            populate: {
+               path: 'image',
+               model: 'Image'
+            }
+         });
       return products;
    }
 
