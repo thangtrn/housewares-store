@@ -6,7 +6,7 @@ const useSchema = new Schema(
    {
       fullname: {
          type: String,
-         require: [true, 'Fullname must be required.']
+         required: [true, 'Fullname must be required.']
       },
       image: {
          type: String,

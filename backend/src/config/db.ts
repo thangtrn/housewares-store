@@ -8,6 +8,7 @@ const connectMongodb = async (uri?: string) => {
       console.log('🚀 ~ connectMongodb ~ Successfully');
    } catch (error) {
       console.log('🚀 ~ connectMongodb ~ Error');
+      throw new Error(error);
    }
 };
 

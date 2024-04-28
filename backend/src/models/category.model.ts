@@ -5,7 +5,7 @@ const categorySchema = new Schema(
    {
       name: {
          type: String,
-         require: [true, 'Category name must be required.']
+         required: [true, 'Category name must be required.']
       },
       image: {
          type: Schema.ObjectId,

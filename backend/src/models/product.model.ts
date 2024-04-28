@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
-import slug from 'mongoose-slug-generator';
+import slug from 'mongoose-slug-updater';
 
 mongoose.plugin(slug);
 
@@ -8,13 +8,19 @@ const productSchema = new Schema(
    {
       name: {
          type: String,
-         require: [true, 'Product name must be required.']
+         required: [true, 'Product name must be required.']
       },
       slug: {
          type: String,
          slug: 'name',
          index: true,
+         slugPaddingSize: 3,
          unique: true
+      },
+      category: {
+         type: Schema.ObjectId,
+         ref: 'Category',
+         required: [true, 'Product category must be required.']
       },
       images: [
          {
@@ -24,11 +30,13 @@ const productSchema = new Schema(
       ],
       price: {
          type: Number,
-         require: [true, 'Product price must be required.']
+         min: [0, 'Product {VALUE} must be least 0'],
+         required: [true, 'Product {VALUE} must be required.']
       },
-      inventoryQuantity: {
+      quantity: {
          type: Number,
-         require: [true, 'Product quantity must be required.']
+         min: [0, 'Product {VALUE} must be least 0'],
+         required: [true, 'Product quantity must be required.']
       },
       detail: {
          size: String,

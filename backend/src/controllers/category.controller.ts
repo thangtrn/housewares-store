@@ -3,6 +3,7 @@ import { Controller, Delete, Get, Post, Put } from '~/decorators';
 import uploader from '~/middlewares/uploader';
 import CategoryRepository from '~/repositories/category.repository';
 import ImageRepository from '~/repositories/image.repository';
+import { CloudImage } from '~/types/image';
 import OkResponse from '~/utils/response/response';
 
 @Controller('/category')
@@ -19,34 +20,29 @@ class CategoryController {
    @Post('/', uploader.single('image'))
    async createCagetory(req: Request, res: Response) {
       const name = req.body.name;
-      const image = req.file;
+      const image: CloudImage = req.file;
 
-      const imageResult = await this.imageRepo.createImage({
-         imageUrl: image.path,
-         publicId: image.filename
-      });
+      const imageResult = await this.imageRepo.createImage(image);
 
       const categoryResult = await this.categoryRepo.createCategory({
          name,
-         image: imageResult._id
+         image: imageResult?._id
       });
 
       return OkResponse(res, { metadata: categoryResult });
    }
 
-   @Put('/')
+   @Put('/', uploader.single('image'))
    async updateCategory(req: Request, res: Response) {
-      const name = req.body.name;
-      const image = req.file;
+      const { _id, name } = req.body;
+      const image: CloudImage = req.file;
 
-      const imageResult = await this.imageRepo.createImage({
-         imageUrl: image.path,
-         publicId: image.filename
-      });
+      const imageResult = await this.imageRepo.createImage(image);
 
-      const categoryResult = await this.categoryRepo.createCategory({
+      const categoryResult = await this.categoryRepo.updateCategory({
+         _id,
          name,
-         image: imageResult._id
+         image: imageResult?._id
       });
 
       return OkResponse(res, { metadata: categoryResult });

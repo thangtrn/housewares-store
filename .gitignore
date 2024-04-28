@@ -6,6 +6,7 @@ dist/
 
 # backend
 logs/
+*.error
 
 # frontend
 /.next/
