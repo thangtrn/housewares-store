@@ -9,7 +9,8 @@ import {
    TableCell,
    Pagination,
    useDisclosure,
-   Spinner
+   Spinner,
+   Input
 } from '@nextui-org/react';
 import { CirclePlus, Eye, RotateCcw, Search, SquarePen, Trash2 } from 'lucide-react';
 import InputUI from '~/components/InputUI';
@@ -19,32 +20,41 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchCategory } from './_fetch';
 import { ICategory } from '~/interfaces/schema.interfaces';
 import EmptyStates from '~/components/EmptyStates';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
 const CategoryPage = () => {
    const {
       data = [],
       isLoading,
-      isError,
       isRefetching,
       refetch
    } = useQuery<ICategory[]>({
       queryKey: ['/category'],
       queryFn: fetchCategory
    });
-   console.log('🚀 ~ CategoryPage ~ isLoading:', isLoading, isRefetching);
 
    const [modalType, setModalType] = useState<ModalType>(null);
    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+   const { register, handleSubmit } = useForm();
 
    const handleOpen = (modalType?: ModalType) => {
       setModalType(modalType);
       onOpen();
    };
 
+   const onSubmit = (data: any) => {
+      console.log('🚀 ~ onSubmit ~ data:', data);
+   };
+
    const renderModal = (modalType: ModalType) => {
       switch (modalType) {
          case 'create':
-            return <div>123123</div>;
+            return (
+               <div>
+                  <InputUI label='Tên danh mục' required {...register('name')} />
+               </div>
+            );
 
          default:
             return null;
@@ -72,10 +82,10 @@ const CategoryPage = () => {
                   color='primary'
                   onClick={() => handleOpen('create')}
                >
-                  Làm mới
+                  Thêm mới
                </ButtonUI>
             </div>
-            <InputUI
+            <Input
                className='max-w-80'
                placeholder='Tìm kiếm danh mục'
                startContent={<Search size={20} />}
@@ -169,6 +179,7 @@ const CategoryPage = () => {
                onOpenChange();
                isOpen === false && setModalType(undefined);
             }}
+            onSave={handleSubmit(onSubmit)}
          >
             {renderModal}
          </ModalUI>

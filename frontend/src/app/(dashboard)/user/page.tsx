@@ -34,7 +34,7 @@ const InfoPage = () => {
                   <div className='grid grid-cols-2 gap-3'>
                      <InputUI label='Họ và tên' />
                      <InputUI label='Số điện thoại' />
-                     <InputUI label='Địa chỉ' className='col-span-2' />
+                     <InputUI label='Địa chỉ' classNames={{ wrapper: 'col-span-2' }} />
                   </div>
                </div>
                <div className='flex justify-end'>
@@ -47,12 +47,11 @@ const InfoPage = () => {
                   <div className='grid grid-cols-2 gap-3'>
                      <InputUI
                         label='Tên đăng nhập'
-                        className='col-span-2'
+                        classNames={{ wrapper: 'col-span-2' }}
                         disabled
-                        variant='faded'
                      />
-                     <InputPasswordUI type='password' label='Mật khẩu' />
-                     <InputPasswordUI type='password' label='Nhập lại mật khẩu' />
+                     <InputPasswordUI label='Mật khẩu' />
+                     <InputPasswordUI label='Nhập lại mật khẩu' />
                   </div>
                </div>
                <div className='flex justify-end'>
