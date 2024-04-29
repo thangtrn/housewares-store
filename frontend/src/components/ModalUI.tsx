@@ -18,6 +18,7 @@ interface ModalUIProps {
       create?: String;
       delete?: String;
    };
+   isLoading: boolean;
    modalType: ModalType;
    isOpen: boolean;
    onOpenChange: (isOpen: boolean) => void;
@@ -31,6 +32,7 @@ const ModalUI: React.FC<Omit<ModalProps, 'children'> & ModalUIProps> = ({
    headerTitle = header,
    children,
    modalType,
+   isLoading,
    isOpen,
    onOpenChange,
    onSave
@@ -43,6 +45,8 @@ const ModalUI: React.FC<Omit<ModalProps, 'children'> & ModalUIProps> = ({
          onOpenChange={(isOpen) => {
             onOpenChange?.(isOpen);
          }}
+         isDismissable={!isLoading}
+         hideCloseButton={isLoading}
       >
          <ModalContent>
             {(onClose) => (
@@ -58,7 +62,7 @@ const ModalUI: React.FC<Omit<ModalProps, 'children'> & ModalUIProps> = ({
                         Đóng
                      </ButtonUI>
                      {modalType !== 'view' && (
-                        <ButtonUI color='primary' onPress={onSave}>
+                        <ButtonUI color='primary' onPress={onSave} isLoading={isLoading}>
                            {modalType === 'delete' ? 'Xoá' : 'Lưu'}
                         </ButtonUI>
                      )}

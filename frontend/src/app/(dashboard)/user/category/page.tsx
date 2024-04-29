@@ -10,19 +10,30 @@ import {
    Pagination,
    useDisclosure,
    Spinner,
-   Input
+   Input,
+   Avatar
 } from '@nextui-org/react';
 import { CirclePlus, Eye, RotateCcw, Search, SquarePen, Trash2 } from 'lucide-react';
-import InputUI from '~/components/InputUI';
+import InputUI, { InputFileUI } from '~/components/InputUI';
 import ButtonUI from '~/components/ButtonUI';
 import ModalUI, { ModalType } from '~/components/ModalUI';
-import { useQuery } from '@tanstack/react-query';
-import { fetchCategory } from './_fetch';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createCategory, fetchCategory } from './_fetch';
 import { ICategory } from '~/interfaces/schema.interfaces';
 import EmptyStates from '~/components/EmptyStates';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 const CategoryPage = () => {
+   // -------------- state --------------
+   const {
+      register,
+      handleSubmit,
+      formState: { errors }
+   } = useForm();
+
+   const [modalType, setModalType] = useState<ModalType>(null);
+   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+
    const {
       data = [],
       isLoading,
@@ -33,10 +44,13 @@ const CategoryPage = () => {
       queryFn: fetchCategory
    });
 
-   const [modalType, setModalType] = useState<ModalType>(null);
-   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+   const createMutation = useMutation({
+      mutationFn: (data) => {
+         return createCategory(data);
+      }
+   });
 
-   const { register, handleSubmit } = useForm();
+   // -------------- handler --------------
 
    const handleOpen = (modalType?: ModalType) => {
       setModalType(modalType);
@@ -45,14 +59,29 @@ const CategoryPage = () => {
 
    const onSubmit = (data: any) => {
       console.log('🚀 ~ onSubmit ~ data:', data);
+      createMutation.mutate(data, {
+         onSuccess: () => {
+            refetch();
+            onClose();
+         }
+      });
    };
 
    const renderModal = (modalType: ModalType) => {
       switch (modalType) {
          case 'create':
             return (
-               <div>
-                  <InputUI label='Tên danh mục' required {...register('name')} />
+               <div className='space-y-3'>
+                  <InputUI
+                     label='Tên danh mục'
+                     {...register('name', { required: 'Vui lòng không bỏ trống trường này' })}
+                     error={errors?.name?.message}
+                  />
+                  <InputFileUI
+                     label='Hình ảnh'
+                     {...register('image', { required: 'Vui lòng không bỏ trống trường này' })}
+                     error={errors?.image?.message}
+                  />
                </div>
             );
 
@@ -112,8 +141,8 @@ const CategoryPage = () => {
             }}
          >
             <TableHeader>
-               <TableColumn>_id</TableColumn>
-               <TableColumn>Danh mục</TableColumn>
+               <TableColumn width='10%'>_id</TableColumn>
+               <TableColumn width='30%'>Danh mục</TableColumn>
                <TableColumn>Hình ảnh</TableColumn>
                <TableColumn width={136}>Thao tác</TableColumn>
             </TableHeader>
@@ -125,9 +154,18 @@ const CategoryPage = () => {
             >
                {(item) => (
                   <TableRow key={item?._id}>
-                     <TableCell>Tony Reichert</TableCell>
-                     <TableCell>CEO</TableCell>
-                     <TableCell>Active</TableCell>
+                     <TableCell>{item?._id}</TableCell>
+                     <TableCell>{item.name}</TableCell>
+                     <TableCell>
+                        {!!item.image?.imageUrl && (
+                           <Avatar
+                              src={item.image?.imageUrl}
+                              isBordered
+                              radius='sm'
+                              className='text-large h-16 w-16'
+                           />
+                        )}
+                     </TableCell>
                      <TableCell>
                         <div className='flex gap-2'>
                            <ButtonUI
@@ -179,6 +217,7 @@ const CategoryPage = () => {
                onOpenChange();
                isOpen === false && setModalType(undefined);
             }}
+            isLoading={createMutation.isPending}
             onSave={handleSubmit(onSubmit)}
          >
             {renderModal}
