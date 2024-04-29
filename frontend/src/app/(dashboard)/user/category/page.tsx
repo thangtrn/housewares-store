@@ -14,23 +14,19 @@ import {
    Avatar
 } from '@nextui-org/react';
 import { CirclePlus, Eye, RotateCcw, Search, SquarePen, Trash2 } from 'lucide-react';
-import InputUI, { InputFileUI } from '~/components/InputUI';
 import ButtonUI from '~/components/ButtonUI';
 import ModalUI, { ModalType } from '~/components/ModalUI';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createCategory, fetchCategory } from './_fetch';
+import { createCategory, deleteCategory, fetchCategory, updateCategory } from './_fetch';
 import { ICategory } from '~/interfaces/schema.interfaces';
 import EmptyStates from '~/components/EmptyStates';
-import { useForm } from 'react-hook-form';
+import FormHandler from './_components/FormHandler';
+
+const formId = 'submit-category';
 
 const CategoryPage = () => {
    // -------------- state --------------
-   const {
-      register,
-      handleSubmit,
-      formState: { errors }
-   } = useForm();
-
+   const [payload, setPayload] = useState<ICategory | undefined>();
    const [modalType, setModalType] = useState<ModalType>(null);
    const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
@@ -50,43 +46,75 @@ const CategoryPage = () => {
       }
    });
 
+   const updateMutation = useMutation({
+      mutationFn: (data) => {
+         return updateCategory(data);
+      }
+   });
+
+   const deleteMutation = useMutation({
+      mutationFn: (data) => {
+         return deleteCategory(data);
+      }
+   });
+
    // -------------- handler --------------
 
-   const handleOpen = (modalType?: ModalType) => {
+   const onMutationSuccess = () => {
+      refetch();
+      onClose();
+   };
+
+   const handleOpen = (modalType?: ModalType, payload?: ICategory) => {
       setModalType(modalType);
+      if (payload) {
+         setPayload(payload);
+      }
       onOpen();
    };
 
-   const onSubmit = (data: any) => {
-      console.log('🚀 ~ onSubmit ~ data:', data);
+   const handleCreate = (data: any) => {
       createMutation.mutate(data, {
-         onSuccess: () => {
-            refetch();
-            onClose();
-         }
+         onSuccess: onMutationSuccess
+      });
+   };
+
+   const handleUpdate = (data: any) => {
+      updateMutation.mutate(data, {
+         onSuccess: onMutationSuccess
+      });
+   };
+
+   const handleDelete = (e: React.FormEvent) => {
+      e.preventDefault();
+      deleteMutation.mutate(payload?._id as any, {
+         onSuccess: onMutationSuccess
       });
    };
 
    const renderModal = (modalType: ModalType) => {
-      switch (modalType) {
-         case 'create':
-            return (
-               <div className='space-y-3'>
-                  <InputUI
-                     label='Tên danh mục'
-                     {...register('name', { required: 'Vui lòng không bỏ trống trường này' })}
-                     error={errors?.name?.message}
-                  />
-                  <InputFileUI
-                     label='Hình ảnh'
-                     {...register('image', { required: 'Vui lòng không bỏ trống trường này' })}
-                     error={errors?.image?.message}
-                  />
-               </div>
-            );
-
-         default:
-            return null;
+      if (modalType === 'delete') {
+         return (
+            <form id={formId} onSubmit={handleDelete}>
+               Bạn có chặc muốn xoá danh mục <span className='font-bold'>{payload?.name}</span> này?
+            </form>
+         );
+      } else {
+         const handleSubmit = (data: any) => {
+            if (modalType === 'create') {
+               handleCreate(data);
+            } else if (modalType === 'edit') {
+               handleUpdate(data);
+            }
+         };
+         return (
+            <FormHandler
+               formId={formId}
+               onSubmit={handleSubmit}
+               type={modalType}
+               payload={payload}
+            />
+         );
       }
    };
 
@@ -174,6 +202,7 @@ const CategoryPage = () => {
                               color='primary'
                               className='bg-yellow-400'
                               size='sm'
+                              onClick={() => handleOpen('view', item)}
                            >
                               <Eye size={18} />
                            </ButtonUI>
@@ -184,6 +213,7 @@ const CategoryPage = () => {
                               color='primary'
                               className='bg-[--orange-color]'
                               size='sm'
+                              onClick={() => handleOpen('edit', item)}
                            >
                               <SquarePen size={18} />
                            </ButtonUI>
@@ -194,6 +224,7 @@ const CategoryPage = () => {
                               color='primary'
                               className='bg-[--red-color]'
                               size='sm'
+                              onClick={() => handleOpen('delete', item)}
                            >
                               <Trash2 size={18} />
                            </ButtonUI>
@@ -215,10 +246,15 @@ const CategoryPage = () => {
             isOpen={isOpen}
             onOpenChange={(isOpen) => {
                onOpenChange();
-               isOpen === false && setModalType(undefined);
+               if (isOpen === false) {
+                  setModalType(undefined);
+                  setPayload(undefined);
+               }
             }}
-            isLoading={createMutation.isPending}
-            onSave={handleSubmit(onSubmit)}
+            isLoading={
+               createMutation.isPending || deleteMutation.isPending || updateMutation.isPending
+            }
+            formId={formId}
          >
             {renderModal}
          </ModalUI>

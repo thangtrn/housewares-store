@@ -5,6 +5,7 @@ import tw from '~/lib/tw';
 type ButtonUI = {
    tooltip?: string;
    tooltipProp?: TooltipProps;
+   disabled?: boolean;
 };
 
 const ButtonUI: React.FC<ButtonProps & ButtonUI> = ({
@@ -13,6 +14,7 @@ const ButtonUI: React.FC<ButtonProps & ButtonUI> = ({
    className,
    color = 'default',
    tooltipProp,
+   disabled,
    ...rest
 }) => {
    if (tooltip) {
@@ -25,14 +27,19 @@ const ButtonUI: React.FC<ButtonProps & ButtonUI> = ({
             closeDelay={0}
             {...tooltipProp}
          >
-            <Button className={tw('rounded', className)} color={color} {...rest}>
+            <Button
+               disabled={disabled}
+               className={tw('rounded', className)}
+               color={color}
+               {...rest}
+            >
                {children}
             </Button>
          </Tooltip>
       );
    }
    return (
-      <Button className={tw('rounded', className)} color={color} {...rest}>
+      <Button disabled={disabled} className={tw('rounded', className)} color={color} {...rest}>
          {children}
       </Button>
    );

@@ -89,6 +89,7 @@ export const InputPasswordUI = forwardRef(InputPassword);
 
 interface InputFileProps extends InputProps {
    name: string;
+   imagePreview: string;
 }
 
 const InputFile: ForwardRefRenderFunction<HTMLInputElement, InputFileProps> = (
@@ -102,11 +103,12 @@ const InputFile: ForwardRefRenderFunction<HTMLInputElement, InputFileProps> = (
       disabled,
       readOnly,
       onChange,
+      imagePreview,
       ...rest
    },
    ref
 ) => {
-   const [preview, setPreview] = useState<string>('');
+   const [preview, setPreview] = useState<string>(imagePreview ? imagePreview : '');
    const handleChange = (e: any) => {
       console.log('🚀 ~ Files change', e?.target?.files);
       setPreview(URL.createObjectURL(e?.target.files[0]));

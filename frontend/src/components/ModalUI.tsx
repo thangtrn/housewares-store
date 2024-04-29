@@ -24,6 +24,7 @@ interface ModalUIProps {
    onOpenChange: (isOpen: boolean) => void;
    onSave?: () => void;
    children: React.ReactNode | ((modalType: ModalType) => React.ReactNode);
+   formId?: string;
 }
 
 const header = { view: 'Xem chi tiết', create: 'Tạo mới', edit: 'Chỉnh sửa', delete: 'Xoá' };
@@ -35,7 +36,8 @@ const ModalUI: React.FC<Omit<ModalProps, 'children'> & ModalUIProps> = ({
    isLoading,
    isOpen,
    onOpenChange,
-   onSave
+   onSave,
+   formId
 }) => {
    console.log();
    return (
@@ -58,11 +60,22 @@ const ModalUI: React.FC<Omit<ModalProps, 'children'> & ModalUIProps> = ({
                      {typeof children === 'function' ? children?.(modalType) : children}
                   </ModalBody>
                   <ModalFooter>
-                     <ButtonUI color='danger' variant='light' onPress={onClose}>
+                     <ButtonUI
+                        disabled={isLoading}
+                        color='danger'
+                        variant='light'
+                        onClick={onClose}
+                     >
                         Đóng
                      </ButtonUI>
                      {modalType !== 'view' && (
-                        <ButtonUI color='primary' onPress={onSave} isLoading={isLoading}>
+                        <ButtonUI
+                           color='primary'
+                           onClick={onSave}
+                           isLoading={isLoading}
+                           form={formId}
+                           type={!!formId ? 'submit' : 'button'}
+                        >
                            {modalType === 'delete' ? 'Xoá' : 'Lưu'}
                         </ButtonUI>
                      )}
