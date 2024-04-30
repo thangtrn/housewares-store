@@ -3,8 +3,20 @@ import filterUndefinedOrNullFields from '~/utils/filterUndefineOrNull';
 import { NotFoundException } from '~/utils/response';
 
 class CategoryRepository {
-   async getAllCategory() {
-      return await Category.find()?.populate('image');
+   async getAllCategory({ page, limit, filter }) {
+      const filterEl = {
+         name: {
+            $regex: `.*${filter}.*`,
+            $options: 'i'
+         }
+      };
+
+      const result = await Category.find(filterEl)
+         ?.populate('image')
+         ?.skip((page - 1) * limit)
+         .limit(limit);
+      const totalItem = await Category.count(filterEl);
+      return { result, totalPage: Math.ceil(totalItem / limit) };
    }
 
    async createCategory({ name, image }) {

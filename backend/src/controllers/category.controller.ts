@@ -4,6 +4,7 @@ import uploader from '~/middlewares/uploader';
 import CategoryRepository from '~/repositories/category.repository';
 import ImageRepository from '~/repositories/image.repository';
 import { CloudImage } from '~/types/image';
+import { Pagination } from '~/types/page';
 import OkResponse from '~/utils/response/response';
 
 @Controller('/category')
@@ -13,8 +14,21 @@ class CategoryController {
 
    @Get('/')
    async getAllCategory(req: Request, res: Response) {
-      const result = await this.categoryRepo.getAllCategory();
-      return OkResponse(res, { metadata: result });
+      const { page = 1, limit = 20, filter = '' } = req.query;
+      console.log('🚀 ~ CategoryController ~ getAllCategory ~ filter:', filter);
+      const { result, totalPage } = await this.categoryRepo.getAllCategory({
+         page,
+         limit,
+         filter
+      });
+      return OkResponse(res, {
+         metadata: result,
+         pagination: {
+            page: Number(page),
+            limit: Number(limit),
+            totalPage
+         }
+      });
    }
 
    @Post('/', uploader.single('image'))

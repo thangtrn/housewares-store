@@ -1,9 +1,15 @@
 import axiosInstance from '~/axios/axiosInstance';
-import { ICategory } from '~/interfaces/schema.interfaces';
+import { IPagination } from '~/interfaces/pagination.interfaces';
 
-export const fetchCategory = async () => {
-   const response = await axiosInstance.get('/category');
-   return response?.data?.metadata;
+export const fetchCategory = async ({ page, limit, filter }: any) => {
+   const response = await axiosInstance.get('/category', {
+      params: {
+         page,
+         limit,
+         filter
+      }
+   });
+   return { result: response?.data?.metadata, pagination: response?.data?.pagination };
 };
 
 export const createCategory = ({ name, image }: any) => {

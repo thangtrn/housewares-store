@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
    Table,
    TableHeader,
@@ -11,18 +11,26 @@ import {
    useDisclosure,
    Spinner,
    Input,
-   Avatar
+   Avatar,
+   Button
 } from '@nextui-org/react';
 import { CirclePlus, Eye, RotateCcw, Search, SquarePen, Trash2 } from 'lucide-react';
 import ButtonUI from '~/components/ButtonUI';
 import ModalUI, { ModalType } from '~/components/ModalUI';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { createCategory, deleteCategory, fetchCategory, updateCategory } from './_fetch';
 import { ICategory } from '~/interfaces/schema.interfaces';
 import EmptyStates from '~/components/EmptyStates';
 import FormHandler from './_components/FormHandler';
+import { IPagination } from '~/interfaces/pagination.interfaces';
+import tw from '~/lib/tw';
 
 const formId = 'submit-category';
+
+interface CategoryQueryData {
+   result: ICategory[];
+   pagination: IPagination;
+}
 
 const CategoryPage = () => {
    // -------------- state --------------
@@ -30,15 +38,25 @@ const CategoryPage = () => {
    const [modalType, setModalType] = useState<ModalType>(null);
    const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
-   const {
-      data = [],
-      isLoading,
-      isRefetching,
-      refetch
-   } = useQuery<ICategory[]>({
-      queryKey: ['/category'],
-      queryFn: fetchCategory
+   const [pagination, setPagination] = useState<IPagination>({
+      page: 1,
+      limit: 4
    });
+
+   const filterRef = useRef<HTMLInputElement>(null);
+   const [filter, setFiter] = useState<string>('');
+
+   const { data, isLoading, isRefetching, refetch } = useQuery<CategoryQueryData>({
+      queryKey: ['/category', pagination, filter],
+      queryFn: () => fetchCategory({ page: pagination.page, limit: pagination.limit, filter }),
+      placeholderData: keepPreviousData
+   });
+
+   useEffect(() => {
+      if (data?.pagination) {
+         setPagination((prev) => ({ ...prev, ...data?.pagination }));
+      }
+   }, [data?.pagination]);
 
    const createMutation = useMutation({
       mutationFn: (data) => {
@@ -142,13 +160,22 @@ const CategoryPage = () => {
                   Thêm mới
                </ButtonUI>
             </div>
-            <Input
-               className='max-w-80'
-               placeholder='Tìm kiếm danh mục'
-               startContent={<Search size={20} />}
-               isClearable
-               variant='flat'
-            />
+            <div className='flex gap-2'>
+               <Input
+                  ref={filterRef}
+                  className='max-w-80'
+                  placeholder='Tìm kiếm danh mục'
+                  startContent={<Search size={20} />}
+               />
+               <Button
+                  isIconOnly
+                  type='submit'
+                  color='primary'
+                  onClick={() => setFiter(filterRef.current?.value as string)}
+               >
+                  <Search size={16} />
+               </Button>
+            </div>
          </div>
          <Table
             aria-label='Category table'
@@ -157,9 +184,10 @@ const CategoryPage = () => {
                <div className='flex w-full justify-end'>
                   <Pagination
                      showControls
-                     page={1}
-                     total={2}
-                     onChange={(page) => console.log(page)}
+                     className={tw(!data && 'invisible')}
+                     page={Number(data?.pagination?.page) || 1}
+                     total={Number(data?.pagination?.totalPage) || 1}
+                     onChange={(page) => setPagination((prev) => ({ ...prev, page: page }))}
                   />
                </div>
             }
@@ -175,7 +203,7 @@ const CategoryPage = () => {
                <TableColumn width={136}>Thao tác</TableColumn>
             </TableHeader>
             <TableBody
-               items={data}
+               items={data?.result || []}
                isLoading={isLoading || isRefetching}
                loadingContent={<Spinner label='Loading...' />}
                emptyContent={<EmptyStates />}
