@@ -1,10 +1,18 @@
 import Product from '~/models/product.model';
 import filterUndefinedOrNullFields from '~/utils/filterUndefineOrNull';
-import { NotFoundException } from '~/utils/response';
+import { BadRequestException, NotFoundException } from '~/utils/response';
 
 class ProductRepository {
-   async getAllProduct() {
-      const products = await Product.find({})
+   async getAllProduct({ page, limit, filter }) {
+      const filterEl = {
+         name: {
+            $regex: `.*${filter}.*`,
+            $options: 'i'
+         }
+      };
+
+      const result = await Product.find({})
+         .sort('createdAt')
          ?.populate({
             path: 'images',
             model: 'Image'
@@ -16,8 +24,11 @@ class ProductRepository {
                path: 'image',
                model: 'Image'
             }
-         });
-      return products;
+         })
+         ?.skip((page - 1) * limit)
+         .limit(limit);
+      const totalItem = await Product.count(filterEl);
+      return { result, totalPage: Math.ceil(totalItem / limit) };
    }
 
    async createProduct({ name, images, category, price, quantity, detail, description }) {
@@ -81,6 +92,9 @@ class ProductRepository {
    }
 
    async deleteProduct(_id) {
+      if (!_id) {
+         throw new BadRequestException('Product _id must be required.');
+      }
       return await Product.deleteOne({ _id });
    }
 }

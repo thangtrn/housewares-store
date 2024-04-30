@@ -27,6 +27,8 @@
       "react-dom": "^18",
       "react-hook-form": "^7.51.3",
       "react-toastify": "^10.0.5",
+      "suneditor": "^2.46.2",
+      "suneditor-react": "^3.6.1",
       "tailwind-merge": "^2.2.2",
       "usehooks-ts": "^3.1.0",
       "zustand": "^4.5.2"

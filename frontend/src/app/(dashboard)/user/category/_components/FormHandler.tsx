@@ -23,7 +23,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
       <form id={formId} className='space-y-3' onSubmit={handleSubmit(onSubmit)}>
          {(type === 'view' || type === 'edit') && (
             <InputUI
-               label='Mã sản phẩm'
+               label='Mã danh mục'
                disabled
                {...register('_id', {
                   value: payload?._id,

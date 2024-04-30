@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import tw from '~/lib/tw';
 import UiProvider from '~/provider/UiProvider';
 import QueryProvider from '~/provider/QueryProvider';
+import ScrollTop from '~/components/ScrollTop';
 
 const roboto = Roboto({
    subsets: ['latin'],
@@ -42,6 +43,7 @@ export default function RootLayout({
                   theme='light'
                   className='select-none'
                />
+               <ScrollTop />
                <NextTopLoader color='var(--blue-color)' height={2} />
                <UiProvider>{children}</UiProvider>
             </QueryProvider>

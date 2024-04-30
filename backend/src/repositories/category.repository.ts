@@ -12,6 +12,7 @@ class CategoryRepository {
       };
 
       const result = await Category.find(filterEl)
+         .sort('createdAt')
          ?.populate('image')
          ?.skip((page - 1) * limit)
          .limit(limit);

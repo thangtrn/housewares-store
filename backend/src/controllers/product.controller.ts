@@ -14,8 +14,16 @@ class ProductController {
 
    @Get('/')
    async getAllProduct(req: Request, res: Response) {
-      const products = await this.productRepo.getAllProduct();
-      return OkResponse(res, { metadata: products });
+      const { page = 1, limit = 20, filter = '' } = req.query;
+      const { result, totalPage } = await this.productRepo.getAllProduct({ page, limit, filter });
+      return OkResponse(res, {
+         metadata: result,
+         pagination: {
+            page: Number(page),
+            limit: Number(limit),
+            totalPage
+         }
+      });
    }
 
    @Post('/', uploader.array('image'))
@@ -47,8 +55,10 @@ class ProductController {
    }
 
    @Delete('/:id')
-   deleteProduct(req: Request, res: Response) {
-      return OkResponse(res);
+   async deleteProduct(req: Request, res: Response) {
+      const _id = req.params.id;
+      const result = await this.productRepo.deleteProduct(_id);
+      return OkResponse(res, { metadata: result });
    }
 }
 

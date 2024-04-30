@@ -30,7 +30,7 @@ const InputUI: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
          </label>
          <input
             ref={ref}
-            type='text'
+            type={type}
             className={tw(
                'transition-ease block w-full rounded border-[1.5px] p-2.5 text-sm text-gray-900 outline-none focus:border-gray-900',
                className,

@@ -144,10 +144,7 @@ const CategoryPage = () => {
                   startContent={<RotateCcw size={16} />}
                   color='primary'
                   className='bg-[--green-color]'
-                  onClick={() => {
-                     console.log('12123');
-                     refetch();
-                  }}
+                  onClick={() => refetch()}
                >
                   Làm mới
                </ButtonUI>
