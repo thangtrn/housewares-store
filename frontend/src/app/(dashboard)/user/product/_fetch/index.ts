@@ -11,10 +11,18 @@ export const fetchProducts = async ({ page, limit, filter }: any) => {
    return { result: response?.data?.metadata, pagination: response?.data?.pagination };
 };
 
-export const createProduct = ({ name, image }: any) => {
+export const createProduct = (data: any = {}) => {
+   console.log('🚀 ~ createProduct ~ data:', data);
    const formData = new FormData();
-   formData.append('name', name);
-   formData.append('image', image?.[0]);
+   Object.entries(data).forEach(([key, value]) => {
+      if (key === 'image') {
+         (value as any[]).forEach((item) => {
+            formData.append(key, item);
+         });
+      } else {
+         formData.append(key, value as any);
+      }
+   });
    return axiosInstance.post('/products', formData, {
       headers: {
          'Content-Type': 'multipart/form-data'
@@ -32,6 +40,17 @@ export const updateProduct = ({ _id, name, image }: any) => {
          'Content-Type': 'multipart/form-data'
       }
    });
+};
+
+export const uploadImage = async (image: any) => {
+   const formData = new FormData();
+   formData.append('image', image);
+   const res = await axiosInstance.post('/upload', formData, {
+      headers: {
+         'Content-Type': 'multipart/form-data'
+      }
+   });
+   return res?.data?.metadata;
 };
 
 export const deleteProduct = (_id: any) => {

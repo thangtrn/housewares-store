@@ -29,7 +29,8 @@ class ProductController {
    @Post('/', uploader.array('image'))
    async createProduct(req: Request, res: Response) {
       const { name, category, price, quantity, detail, description } = req.body;
-      const images = await this.imageRepo.createMultipleImage(req.files as CloudImage[]);
+      const file = req.files as CloudImage[];
+      const images = await this.imageRepo.createMultipleImage(file);
 
       if (!images || images.length <= 0) {
          throw new BadRequestException('Product images not be empty.');

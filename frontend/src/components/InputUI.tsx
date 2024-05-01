@@ -111,12 +111,18 @@ const InputFile: ForwardRefRenderFunction<HTMLInputElement, InputFileProps> = (
    const [preview, setPreview] = useState<string>(imagePreview ? imagePreview : '');
    const handleChange = (e: any) => {
       console.log('🚀 ~ Files change', e?.target?.files);
-      setPreview(URL.createObjectURL(e?.target.files[0]));
+      const file = e?.target?.files[0];
+      if (file) {
+         setPreview(URL?.createObjectURL(file));
+      } else {
+         URL?.revokeObjectURL(preview);
+         setPreview('');
+      }
    };
 
    useEffect(() => {
       return () => {
-         preview && URL.revokeObjectURL(preview);
+         preview && URL?.revokeObjectURL(preview);
       };
    }, [preview]);
 

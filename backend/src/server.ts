@@ -18,6 +18,7 @@ import AuthController from '~/controllers/auth.controller';
 import ProductController from '~/controllers/product.controller';
 import CategoryController from './controllers/category.controller';
 import OrderController from './controllers/order.controller';
+import UploadController from './controllers/upload.controller';
 
 class App {
    protected app: Application;
@@ -57,7 +58,8 @@ class App {
          UserController,
          CategoryController,
          ProductController,
-         OrderController
+         OrderController,
+         UploadController
       ]);
    };
 

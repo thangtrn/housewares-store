@@ -9,6 +9,9 @@ import dynamic from 'next/dynamic';
 import 'suneditor/dist/css/suneditor.min.css';
 import { SunEditorOptions } from 'suneditor/src/options';
 import { UploadBeforeHandler } from 'suneditor-react/dist/types/upload';
+import { uploadImage } from '../_fetch';
+import { Select, SelectItem } from '@nextui-org/react';
+import SelectUI from '~/components/SelectUI';
 
 const SunEditor = dynamic(() => import('suneditor-react'), {
    ssr: false
@@ -66,20 +69,41 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
    } = useForm();
 
    const handleChange = (content: any) => {
-      console.log(content); //Get Content Inside Editor
+      console.log(content);
    };
 
-   const handleImageUploadBefore = (
-      files: File[],
-      info: object,
-      uploadHandler: UploadBeforeHandler
-   ) => {
-      // uploadHandler is a function
-      console.log(files, info);
+   function onImageUploadBefore() {
+      return (files: File[], info: object, uploadHandler: UploadBeforeHandler) => {
+         (async () => {
+            const data = await uploadImage(files[0]);
+            const res = {
+               result: [
+                  {
+                     url: data?.imageUrl,
+                     name: 'thumbnail',
+                     size: 600
+                  }
+               ]
+            };
+
+            uploadHandler(res);
+         })();
+
+         uploadHandler();
+      };
+   }
+
+   const formatFormSubmitData = (data: any) => {
+      const { image_1, image_2, image_3, image_4, image_5, ...rest } = data;
+      const image = [image_1?.[0], image_2?.[0], image_3?.[0], image_4?.[0], image_5?.[0]];
+      onSubmit({
+         ...rest,
+         image: image.filter((x) => !!x)
+      });
    };
 
    return (
-      <form id={formId} className='space-y-3' onSubmit={handleSubmit(onSubmit)}>
+      <form id={formId} className='space-y-3' onSubmit={handleSubmit(formatFormSubmitData)}>
          {(type === 'view' || type === 'edit') && (
             <InputUI
                label='Mã sản phẩm'
@@ -99,81 +123,98 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
             })}
             error={errors?.name?.message}
          />
-         <div className='flex items-end gap-2'>
-            <InputFileUI
-               classNames={{
-                  wrapper: 'w-fit'
-               }}
-               label='Hình ảnh'
-               disabled={type === 'view'}
-               imagePreview={payload?.images?.[0]?.imageUrl}
-               {...register('images_1', {
-                  required: type === 'create' ? 'Vui lòng không bỏ trống trường này' : false
+         <div>
+            <label className='mb-2 block text-sm font-medium text-gray-900'>Hình ảnh</label>
+            <div className='flex gap-2'>
+               <InputFileUI
+                  classNames={{
+                     wrapper: 'w-fit'
+                  }}
+                  disabled={type === 'view'}
+                  imagePreview={payload?.images?.[0]?.imageUrl}
+                  {...register('image_1', {
+                     required: type === 'create' ? 'Vui lòng không bỏ trống trường này' : false
+                  })}
+                  error={errors?.image_1?.message}
+               />
+               <InputFileUI
+                  classNames={{
+                     wrapper: 'w-fit'
+                  }}
+                  disabled={type === 'view'}
+                  imagePreview={payload?.images?.[0]?.imageUrl}
+                  {...register('image_2')}
+               />
+               <InputFileUI
+                  classNames={{
+                     wrapper: 'w-fit'
+                  }}
+                  disabled={type === 'view'}
+                  imagePreview={payload?.images?.[0]?.imageUrl}
+                  {...register('image_3')}
+               />
+               <InputFileUI
+                  classNames={{
+                     wrapper: 'w-fit'
+                  }}
+                  disabled={type === 'view'}
+                  imagePreview={payload?.images?.[0]?.imageUrl}
+                  {...register('image_4')}
+               />
+               <InputFileUI
+                  classNames={{
+                     wrapper: 'w-fit'
+                  }}
+                  disabled={type === 'view'}
+                  imagePreview={payload?.images?.[0]?.imageUrl}
+                  {...register('image_5')}
+               />
+            </div>
+         </div>
+         <div className='grid grid-cols-3 gap-4'>
+            <SelectUI
+               label='Danh mục sản phẩm'
+               {...register('category', {
+                  required: 'Vui lòng không bỏ trống trường này'
                })}
-               error={errors?.images?.message}
+               values={[
+                  {
+                     text: 123,
+                     value: 123
+                  }
+               ]}
+               defaultValue=''
+               error={errors?.category?.message}
             />
-            <InputFileUI
-               classNames={{
-                  wrapper: 'w-fit'
-               }}
-               disabled={type === 'view'}
-               imagePreview={payload?.images?.[0]?.imageUrl}
-               {...register('images_2', {
-                  required: type === 'create' ? 'Vui lòng không bỏ trống trường này' : false
+            <InputUI
+               type='number'
+               label='Số lương sản phẩm'
+               readOnly={type === 'view'}
+               {...register('quantity', {
+                  value: payload?.quantity,
+                  required: 'Vui lòng không bỏ trống trường này',
+                  min: {
+                     value: 0,
+                     message: 'Số lượng sản phẩm phải lớn hơn hoặc bằng 0.'
+                  }
                })}
-               error={errors?.images?.message}
+               error={errors?.quantity?.message}
             />
-            <InputFileUI
-               classNames={{
-                  wrapper: 'w-fit'
-               }}
-               disabled={type === 'view'}
-               imagePreview={payload?.images?.[0]?.imageUrl}
-               {...register('images_3', {
-                  required: type === 'create' ? 'Vui lòng không bỏ trống trường này' : false
+            <InputUI
+               type='number'
+               label='Giá bán'
+               readOnly={type === 'view'}
+               {...register('price', {
+                  value: payload?.price,
+                  required: 'Vui lòng không bỏ trống trường này',
+                  min: {
+                     value: 0,
+                     message: 'Giá sản phẩm phải lớn hơn hoặc bằng 0.'
+                  }
                })}
-               error={errors?.images?.message}
-            />
-            <InputFileUI
-               classNames={{
-                  wrapper: 'w-fit'
-               }}
-               disabled={type === 'view'}
-               imagePreview={payload?.images?.[0]?.imageUrl}
-               {...register('images', {
-                  required: type === 'create' ? 'Vui lòng không bỏ trống trường này' : false
-               })}
-               error={errors?.images?.message}
+               error={errors?.price?.message}
             />
          </div>
-         <InputUI
-            type='number'
-            label='Số lương sản phẩm'
-            readOnly={type === 'view'}
-            {...register('quantity', {
-               value: payload?.quantity,
-               required: 'Vui lòng không bỏ trống trường này',
-               min: {
-                  value: 0,
-                  message: 'Số lượng sản phẩm phải lớn hơn hoặc bằng 0.'
-               }
-            })}
-            error={errors?.quantity?.message}
-         />
-         <InputUI
-            type='number'
-            label='Giá bán'
-            readOnly={type === 'view'}
-            {...register('price', {
-               value: payload?.price,
-               required: 'Vui lòng không bỏ trống trường này',
-               min: {
-                  value: 0,
-                  message: 'Giá sản phẩm phải lớn hơn hoặc bằng 0.'
-               }
-            })}
-            error={errors?.price?.message}
-         />
          <div className='grid grid-cols-4 gap-4'>
             <InputUI
                label='Kích thước'
@@ -211,10 +252,11 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
          <div>
             <label className='mb-2 block text-sm font-medium text-gray-900'>Mô tả</label>
             <SunEditor
+               readOnly={type === 'view'}
                width='100%'
                height='600px'
                onChange={handleChange}
-               onImageUploadBefore={handleImageUploadBefore}
+               onImageUploadBefore={onImageUploadBefore() as any}
                setOptions={editorOption}
             />
          </div>

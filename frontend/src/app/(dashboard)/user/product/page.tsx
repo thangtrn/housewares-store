@@ -25,6 +25,7 @@ import FormHandler from './_components/FormHandler';
 import { IPagination } from '~/interfaces/pagination.interfaces';
 import tw from '~/lib/tw';
 import { IProduct } from '~/interfaces/schema.interfaces';
+import Link from 'next/link';
 
 const formId = 'submit-product';
 
@@ -150,13 +151,11 @@ const ProductPage = () => {
                   Làm mới
                </ButtonUI>
 
-               <ButtonUI
-                  startContent={<CirclePlus size={16} />}
-                  color='primary'
-                  onClick={() => handleOpen('create')}
-               >
-                  Thêm mới
-               </ButtonUI>
+               <Link href='/user/product/create'>
+                  <ButtonUI startContent={<CirclePlus size={16} />} color='primary'>
+                     Thêm mới
+                  </ButtonUI>
+               </Link>
             </div>
             <div className='flex gap-2'>
                <Input
@@ -237,7 +236,6 @@ const ProductPage = () => {
                            >
                               <Eye size={18} />
                            </ButtonUI>
-
                            <ButtonUI
                               isIconOnly
                               tooltip='Sửa'
