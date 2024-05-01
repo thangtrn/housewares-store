@@ -1,3 +1,4 @@
+'use client';
 import React, { ForwardRefRenderFunction, forwardRef, useEffect, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import tw from '~/lib/tw';

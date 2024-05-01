@@ -5,3 +5,5 @@ export interface IProduct {
    note?: string;
    image: string;
 }
+
+// DELETE FILE

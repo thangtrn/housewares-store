@@ -14,10 +14,10 @@ import SelectUI from '~/components/SelectUI';
 import { CategoryQueryData } from '../../category/page';
 import { useQuery } from '@tanstack/react-query';
 import { fetchCategory } from '../../category/_fetch';
-
-const SunEditor = dynamic(() => import('suneditor-react'), {
-   ssr: false
-});
+import SunEditor from 'suneditor-react';
+// const SunEditor = dynamic(() => import('suneditor-react'), {
+//    ssr: false
+// });
 
 interface FormHandlerProps {
    formId: string;
@@ -195,7 +195,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
                   value: payload?.category?._id,
                   required: 'Vui lòng không bỏ trống trường này'
                })}
-               disable={type === 'view'}
+               disabled={type === 'view'}
                values={data?.result?.map((item) => ({ value: item._id, text: item.name })) || []}
                defaultValue=''
                error={errors?.category?.message}

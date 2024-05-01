@@ -6,10 +6,12 @@ const accountSchema = new Schema(
    {
       username: {
          type: String,
-         unique: true
+         unique: true,
+         required: [true, '{VALUE} must be required.']
       },
       password: {
-         type: String
+         type: String,
+         required: [true, '{VALUE} must be required.']
       },
       provider: {
          type: String,
@@ -23,4 +25,6 @@ const accountSchema = new Schema(
    }
 );
 
-export default mongoose.model('User', accountSchema);
+const Account = mongoose.model('Account', accountSchema);
+
+export default Account;

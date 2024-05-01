@@ -12,7 +12,7 @@ class CategoryRepository {
          }
       };
 
-      if (page && limit) {
+      if (!page) {
          const result = await Category.find(filterEl).sort('createdAt')?.populate('image');
          return { result };
       }
@@ -23,7 +23,15 @@ class CategoryRepository {
          ?.skip((page - 1) * limit)
          .limit(limit);
       const totalItem = await Category.count(filterEl);
-      return { result, totalPage: Math.ceil(totalItem / limit) };
+
+      return {
+         result,
+         pagination: {
+            page: Number(page),
+            limit: Number(limit),
+            totalPage: Math.ceil(totalItem / limit)
+         }
+      };
    }
 
    async createCategory({ name, image }) {

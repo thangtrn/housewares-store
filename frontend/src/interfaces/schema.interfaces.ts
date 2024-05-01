@@ -33,3 +33,49 @@ export interface IProduct {
    createdAt: string;
    updatedAt: string;
 }
+
+export interface IOrderItem {
+   _id?: string;
+   product: IProduct;
+   price: number;
+   quantity: number;
+}
+
+export interface IOrder {
+   _id: string;
+   items: IOrderItem[];
+   address: string;
+   phone: string;
+   status: string;
+   note: string;
+   totalPrice: number;
+   orderBy: IUser;
+   createdAt: string;
+   updatedAt: string;
+}
+
+export interface IUser {
+   _id: string;
+   fullname: string;
+   image: string;
+   account: IAccount;
+   role: string;
+   createdAt: string;
+   updatedAt: string;
+}
+
+export interface IAccount {
+   _id: string;
+   username: string;
+   password?: string;
+   provider: Provider;
+   providerId?: string;
+   createdAt: string;
+   updatedAt: string;
+}
+
+export enum Provider {
+   LOCAL = 'Local',
+   GOOGLE = 'Google',
+   FACEBOOK = 'Facebook'
+}

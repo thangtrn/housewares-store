@@ -19,7 +19,7 @@ const Header = () => {
          <div className='flex h-[--header-height]'>
             {/* LOGO */}
             <BrandLogo className='w-[--sidebar-width] px-3 text-xl' size={40} href='/user' />
-            <div className='flex flex-1 items-center justify-between px-4'>
+            <div className='container flex flex-1 items-center justify-between px-4'>
                <div></div>
                <div className='flex gap-4'>
                   <Notification />

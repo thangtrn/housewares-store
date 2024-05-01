@@ -15,14 +15,10 @@ class ProductController {
    @Get('/')
    async getAllProduct(req: Request, res: Response) {
       const { page = 1, limit = 20, filter = '' } = req.query;
-      const { result, totalPage } = await this.productRepo.getAllProduct({ page, limit, filter });
+      const { result, pagination } = await this.productRepo.getAllProduct({ page, limit, filter });
       return OkResponse(res, {
          metadata: result,
-         pagination: {
-            page: Number(page),
-            limit: Number(limit),
-            totalPage
-         }
+         pagination
       });
    }
 

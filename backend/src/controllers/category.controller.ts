@@ -14,19 +14,15 @@ class CategoryController {
 
    @Get('/')
    async getAllCategory(req: Request, res: Response) {
-      const { page, limit, filter = '' } = req.query;
-      const { result, totalPage } = await this.categoryRepo.getAllCategory({
+      const { page, limit = 20, filter = '' } = req.query;
+      const { result, pagination } = await this.categoryRepo.getAllCategory({
          page,
          limit,
          filter
       });
       return OkResponse(res, {
          metadata: result,
-         pagination: {
-            page: Number(page),
-            limit: Number(limit),
-            totalPage
-         }
+         pagination
       });
    }
 

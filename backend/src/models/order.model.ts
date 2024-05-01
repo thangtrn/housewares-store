@@ -22,6 +22,8 @@ const orderSchema = new Schema(
             }
          }
       ],
+      address: String,
+      phone: String,
       status: {
          type: String,
          enum: Object.values(OrderStatus),
@@ -32,6 +34,11 @@ const orderSchema = new Schema(
          type: Number,
          min: [0, 'Order {VALUE} must be least 0'],
          required: [true, 'Order {VALUE} must be required.']
+      },
+      orderBy: {
+         type: Schema.ObjectId,
+         ref: 'User',
+         required: [true, 'OrderBy must be required.']
       }
    },
    {
@@ -39,4 +46,6 @@ const orderSchema = new Schema(
    }
 );
 
-export default mongoose.model('Order', orderSchema);
+const Order = mongoose.model('Order', orderSchema);
+
+export default Order;

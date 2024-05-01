@@ -27,8 +27,17 @@ class ProductRepository {
          })
          ?.skip((page - 1) * limit)
          .limit(limit);
+
       const totalItem = await Product.count(filterEl);
-      return { result, totalPage: Math.ceil(totalItem / limit) };
+
+      return {
+         result,
+         pagination: {
+            page: Number(page),
+            limit: Number(limit),
+            totalPage: Math.ceil(totalItem / limit)
+         }
+      };
    }
 
    async createProduct({ name, images, category, price, quantity, detail, description }) {

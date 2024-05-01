@@ -1,3 +1,4 @@
+'use client';
 import React, { ForwardRefRenderFunction, forwardRef } from 'react';
 import tw from '~/lib/tw';
 
