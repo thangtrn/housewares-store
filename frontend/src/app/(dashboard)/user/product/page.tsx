@@ -13,7 +13,8 @@ import {
    Input,
    Avatar,
    Button,
-   AvatarGroup
+   AvatarGroup,
+   Chip
 } from '@nextui-org/react';
 import { CirclePlus, Eye, RotateCcw, Search, SquarePen, Trash2 } from 'lucide-react';
 import ButtonUI from '~/components/ButtonUI';
@@ -26,6 +27,7 @@ import { IPagination } from '~/interfaces/pagination.interfaces';
 import tw from '~/lib/tw';
 import { IProduct } from '~/interfaces/schema.interfaces';
 import Link from 'next/link';
+import formatPrice from '~/utils/formatPrice';
 
 const formId = 'submit-product';
 
@@ -68,7 +70,7 @@ const ProductPage = () => {
 
    const updateMutation = useMutation({
       mutationFn: (data) => {
-         return updateProduct(data);
+         return updateProduct(data as any);
       }
    });
 
@@ -226,8 +228,16 @@ const ProductPage = () => {
                            ))}
                         </AvatarGroup>
                      </TableCell>
-                     <TableCell>{item?.price}</TableCell>
-                     <TableCell>{item?.quantity}</TableCell>
+                     <TableCell>
+                        <Chip isDisabled color='primary'>
+                           {formatPrice(item?.price)}
+                        </Chip>
+                     </TableCell>
+                     <TableCell>
+                        <Chip isDisabled color='primary'>
+                           {item?.quantity}
+                        </Chip>
+                     </TableCell>
                      <TableCell>
                         <div className='flex gap-2'>
                            <ButtonUI

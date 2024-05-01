@@ -1,6 +1,7 @@
 import Category from '~/models/category.model';
+import Product from '~/models/product.model';
 import filterUndefinedOrNullFields from '~/utils/filterUndefineOrNull';
-import { NotFoundException } from '~/utils/response';
+import { BadRequestException, NotFoundException } from '~/utils/response';
 
 class CategoryRepository {
    async getAllCategory({ page, limit, filter }) {
@@ -42,6 +43,10 @@ class CategoryRepository {
    }
 
    async deleteCategory(_id) {
+      const isExists = await Product.find({ category: _id });
+      if (isExists || isExists.length > 0) {
+         throw new BadRequestException('Some products using this category _id.');
+      }
       return await Category.deleteOne({ _id });
    }
 }

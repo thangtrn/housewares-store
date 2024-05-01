@@ -69,7 +69,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
       queryFn: () => fetchCategory({})
    });
 
-   const [description, setDescription] = useState<string>('');
+   const [description, setDescription] = useState<string>(payload?.description || '');
 
    const {
       register,

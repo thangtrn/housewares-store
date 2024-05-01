@@ -49,10 +49,21 @@ class ProductController {
       return OkResponse(res, { metadata: product });
    }
 
-   @Put('/', uploader.single('images'))
-   updateProduct(req: Request, res: Response) {
-      const data = req.body;
-      return OkResponse(res);
+   @Put('/')
+   async updateProduct(req: Request, res: Response) {
+      const { _id, name, category, price, quantity, detail, description } = req.body;
+
+      const product = await this.productRepo.updateProduct({
+         _id,
+         name,
+         category,
+         price,
+         quantity,
+         detail,
+         description
+      });
+
+      return OkResponse(res, { metadata: product });
    }
 
    @Delete('/:id')

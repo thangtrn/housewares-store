@@ -11,7 +11,7 @@ class ProductRepository {
          }
       };
 
-      const result = await Product.find({})
+      const result = await Product.find(filterEl)
          .sort('createdAt')
          ?.populate({
             path: 'images',
@@ -59,12 +59,11 @@ class ProductRepository {
       return result;
    }
 
-   async updateProduct({ _id, name, images, category, price, quantity, detail, description }) {
+   async updateProduct({ _id, name, category, price, quantity, detail, description }) {
       const product = await Product.findByIdAndUpdate(
          _id,
          filterUndefinedOrNullFields({
             name,
-            images: images.map((item) => item?._id),
             category,
             price,
             quantity,

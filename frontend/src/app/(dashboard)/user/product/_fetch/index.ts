@@ -1,4 +1,5 @@
 import axiosInstance from '~/axios/axiosInstance';
+import { IProduct } from '~/interfaces/schema.interfaces';
 
 export const fetchProducts = async ({ page, limit, filter }: any) => {
    const response = await axiosInstance.get('/products', {
@@ -12,7 +13,6 @@ export const fetchProducts = async ({ page, limit, filter }: any) => {
 };
 
 export const createProduct = (data: any = {}) => {
-   console.log('🚀 ~ createProduct ~ data:', data);
    const formData = new FormData();
    Object.entries(data).forEach(([key, value]) => {
       if (key === 'image') {
@@ -32,16 +32,8 @@ export const createProduct = (data: any = {}) => {
    });
 };
 
-export const updateProduct = ({ _id, name, image }: any) => {
-   const formData = new FormData();
-   formData.append('_id', _id);
-   formData.append('name', name);
-   formData.append('image', image?.[0]);
-   return axiosInstance.put('/products', formData, {
-      headers: {
-         'Content-Type': 'multipart/form-data'
-      }
-   });
+export const updateProduct = (data: Omit<IProduct, 'images'>) => {
+   return axiosInstance.put('/products', data);
 };
 
 export const uploadImage = async (image: any) => {
