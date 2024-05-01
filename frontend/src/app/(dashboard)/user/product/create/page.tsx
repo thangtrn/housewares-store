@@ -11,6 +11,7 @@ const formId = 'submit-product';
 
 const CreateProductPage = () => {
    const router = useRouter();
+
    const createMutation = useMutation({
       mutationFn: (data) => {
          return createProduct(data);
@@ -19,7 +20,10 @@ const CreateProductPage = () => {
 
    const handleCreate = (data: any) => {
       createMutation.mutate(data, {
-         onSuccess: () => toast.success('Tạo mới sản phẩm thành công.')
+         onSuccess: () => {
+            toast.success('Tạo mới sản phẩm thành công.');
+            router.push('/user/product');
+         }
       });
    };
    return (

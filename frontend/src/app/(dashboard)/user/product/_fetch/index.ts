@@ -19,6 +19,8 @@ export const createProduct = (data: any = {}) => {
          (value as any[]).forEach((item) => {
             formData.append(key, item);
          });
+      } else if (key === 'detail') {
+         formData.append(key, JSON.stringify(value));
       } else {
          formData.append(key, value as any);
       }

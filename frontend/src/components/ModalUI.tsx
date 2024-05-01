@@ -38,6 +38,7 @@ const ModalUI: React.FC<Omit<ModalProps, 'children'> & ModalUIProps> = ({
    onOpenChange,
    onSave,
    formId,
+   size,
    ...rest
 }) => {
    console.log();
@@ -50,8 +51,8 @@ const ModalUI: React.FC<Omit<ModalProps, 'children'> & ModalUIProps> = ({
          }}
          isDismissable={!isLoading}
          hideCloseButton={isLoading}
-         size={modalType === 'delete' ? undefined : rest.size}
          scrollBehavior='inside'
+         size={modalType === 'delete' ? 'sm' : size}
          {...rest}
       >
          <ModalContent>

@@ -14,7 +14,7 @@ class CategoryController {
 
    @Get('/')
    async getAllCategory(req: Request, res: Response) {
-      const { page = 1, limit = 20, filter = '' } = req.query;
+      const { page, limit, filter = '' } = req.query;
       const { result, totalPage } = await this.categoryRepo.getAllCategory({
          page,
          limit,

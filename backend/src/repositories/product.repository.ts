@@ -39,7 +39,7 @@ class ProductRepository {
             category,
             price,
             quantity,
-            detail,
+            detail: JSON.parse(detail),
             description
          })
       );

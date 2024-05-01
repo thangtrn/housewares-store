@@ -27,7 +27,7 @@ import tw from '~/lib/tw';
 
 const formId = 'submit-category';
 
-interface CategoryQueryData {
+export interface CategoryQueryData {
    result: ICategory[];
    pagination: IPagination;
 }
@@ -40,7 +40,7 @@ const CategoryPage = () => {
 
    const [pagination, setPagination] = useState<IPagination>({
       page: 1,
-      limit: 4
+      limit: 20
    });
 
    const filterRef = useRef<HTMLInputElement>(null);

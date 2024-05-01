@@ -1,6 +1,14 @@
 import axiosInstance from '~/axios/axiosInstance';
 
-export const fetchCategory = async ({ page, limit, filter }: any) => {
+export const fetchCategory = async ({
+   page,
+   limit,
+   filter
+}: {
+   page?: number;
+   limit?: number;
+   filter?: string;
+}) => {
    const response = await axiosInstance.get('/category', {
       params: {
          page,

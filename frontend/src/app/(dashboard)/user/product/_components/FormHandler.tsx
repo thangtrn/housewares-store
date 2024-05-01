@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InputUI, { InputFileUI } from '~/components/InputUI';
 import { ModalType } from '~/components/ModalUI';
@@ -10,8 +10,10 @@ import 'suneditor/dist/css/suneditor.min.css';
 import { SunEditorOptions } from 'suneditor/src/options';
 import { UploadBeforeHandler } from 'suneditor-react/dist/types/upload';
 import { uploadImage } from '../_fetch';
-import { Select, SelectItem } from '@nextui-org/react';
 import SelectUI from '~/components/SelectUI';
+import { CategoryQueryData } from '../../category/page';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCategory } from '../../category/_fetch';
 
 const SunEditor = dynamic(() => import('suneditor-react'), {
    ssr: false
@@ -62,6 +64,13 @@ const editorOption: SunEditorOptions = {
 };
 
 const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, payload }) => {
+   const { data } = useQuery<CategoryQueryData>({
+      queryKey: ['/category-all'],
+      queryFn: () => fetchCategory({})
+   });
+
+   const [description, setDescription] = useState<string>('');
+
    const {
       register,
       handleSubmit,
@@ -69,7 +78,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
    } = useForm();
 
    const handleChange = (content: any) => {
-      console.log(content);
+      setDescription(content);
    };
 
    function onImageUploadBefore() {
@@ -94,11 +103,19 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
    }
 
    const formatFormSubmitData = (data: any) => {
-      const { image_1, image_2, image_3, image_4, image_5, ...rest } = data;
+      const { image_1, image_2, image_3, image_4, image_5, size, color, brand, origin, ...rest } =
+         data;
       const image = [image_1?.[0], image_2?.[0], image_3?.[0], image_4?.[0], image_5?.[0]];
       onSubmit({
          ...rest,
-         image: image.filter((x) => !!x)
+         image: image.filter((x) => !!x),
+         detail: {
+            size,
+            color,
+            brand,
+            origin
+         },
+         description
       });
    };
 
@@ -130,7 +147,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
                   classNames={{
                      wrapper: 'w-fit'
                   }}
-                  disabled={type === 'view'}
+                  disabled={type === 'view' || type === 'edit'}
                   imagePreview={payload?.images?.[0]?.imageUrl}
                   {...register('image_1', {
                      required: type === 'create' ? 'Vui lòng không bỏ trống trường này' : false
@@ -141,7 +158,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
                   classNames={{
                      wrapper: 'w-fit'
                   }}
-                  disabled={type === 'view'}
+                  disabled={type === 'view' || type === 'edit'}
                   imagePreview={payload?.images?.[0]?.imageUrl}
                   {...register('image_2')}
                />
@@ -149,7 +166,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
                   classNames={{
                      wrapper: 'w-fit'
                   }}
-                  disabled={type === 'view'}
+                  disabled={type === 'view' || type === 'edit'}
                   imagePreview={payload?.images?.[0]?.imageUrl}
                   {...register('image_3')}
                />
@@ -157,7 +174,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
                   classNames={{
                      wrapper: 'w-fit'
                   }}
-                  disabled={type === 'view'}
+                  disabled={type === 'view' || type === 'edit'}
                   imagePreview={payload?.images?.[0]?.imageUrl}
                   {...register('image_4')}
                />
@@ -165,7 +182,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
                   classNames={{
                      wrapper: 'w-fit'
                   }}
-                  disabled={type === 'view'}
+                  disabled={type === 'view' || type === 'edit'}
                   imagePreview={payload?.images?.[0]?.imageUrl}
                   {...register('image_5')}
                />
@@ -175,14 +192,11 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
             <SelectUI
                label='Danh mục sản phẩm'
                {...register('category', {
+                  value: payload?.category?._id,
                   required: 'Vui lòng không bỏ trống trường này'
                })}
-               values={[
-                  {
-                     text: 123,
-                     value: 123
-                  }
-               ]}
+               disable={type === 'view'}
+               values={data?.result?.map((item) => ({ value: item._id, text: item.name })) || []}
                defaultValue=''
                error={errors?.category?.message}
             />
@@ -255,6 +269,8 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
                readOnly={type === 'view'}
                width='100%'
                height='600px'
+               defaultValue={payload?.description || ''}
+               placeholder='Nhập mô tả sản phẩm'
                onChange={handleChange}
                onImageUploadBefore={onImageUploadBefore() as any}
                setOptions={editorOption}

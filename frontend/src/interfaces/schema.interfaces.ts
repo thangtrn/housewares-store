@@ -28,6 +28,7 @@ export interface IProduct {
       brand: String;
       origin: String;
    };
+   description?: string;
    quantity: number;
    createdAt: string;
    updatedAt: string;

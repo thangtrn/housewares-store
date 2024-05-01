@@ -42,7 +42,7 @@ const ProductPage = () => {
 
    const [pagination, setPagination] = useState<IPagination>({
       page: 1,
-      limit: 4
+      limit: 20
    });
 
    const filterRef = useRef<HTMLInputElement>(null);
@@ -195,8 +195,11 @@ const ProductPage = () => {
          >
             <TableHeader>
                <TableColumn width='10%'>_id</TableColumn>
+               <TableColumn>Tên sản phẩm</TableColumn>
                <TableColumn width='30%'>Danh mục</TableColumn>
-               <TableColumn>Hình ảnh</TableColumn>
+               <TableColumn width='20%'>Hình ảnh</TableColumn>
+               <TableColumn>Giá</TableColumn>
+               <TableColumn>Số lượng</TableColumn>
                <TableColumn width={136}>Thao tác</TableColumn>
             </TableHeader>
             <TableBody
@@ -209,21 +212,22 @@ const ProductPage = () => {
                   <TableRow key={item?._id}>
                      <TableCell>{item?._id}</TableCell>
                      <TableCell>{item?.name}</TableCell>
+                     <TableCell>{item?.category?.name}</TableCell>
                      <TableCell>
-                        <AvatarGroup isBordered>
-                           {
-                              !!item.images?.map((image) => (
-                                 <Avatar
-                                    key={image._id}
-                                    src={image?.imageUrl}
-                                    isBordered
-                                    radius='sm'
-                                    className='text-large h-16 w-16'
-                                 />
-                              ))
-                           }
+                        <AvatarGroup isBordered className='!justify-start'>
+                           {item?.images?.map((image) => (
+                              <Avatar
+                                 key={image?._id}
+                                 src={image?.imageUrl}
+                                 isBordered
+                                 radius='sm'
+                                 className='text-large h-16 w-16'
+                              />
+                           ))}
                         </AvatarGroup>
                      </TableCell>
+                     <TableCell>{item?.price}</TableCell>
+                     <TableCell>{item?.quantity}</TableCell>
                      <TableCell>
                         <div className='flex gap-2'>
                            <ButtonUI
