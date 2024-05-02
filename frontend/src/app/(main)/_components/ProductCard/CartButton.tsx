@@ -2,8 +2,11 @@
 import React from 'react';
 import { Button, Tooltip } from '@nextui-org/react';
 import { ShoppingCart } from 'lucide-react';
+import { IProduct } from '~/interfaces/product.interfaces';
 
-const CartButton = () => {
+export interface ProductCardProps extends IProduct {}
+
+const CartButton = ({ data: IProduct }) => {
    return (
       <Tooltip
          showArrow={true}

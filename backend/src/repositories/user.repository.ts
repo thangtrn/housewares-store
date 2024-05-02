@@ -1,4 +1,5 @@
 import User from '~/models/user.model';
+import filterUndefinedOrNullFields from '~/utils/filterUndefineOrNull';
 
 class UserRepository {
    async getAllUser({ page, limit, filter }) {
@@ -32,6 +33,15 @@ class UserRepository {
             totalPage: Math.ceil(totalItem / limit)
          }
       };
+   }
+
+   async updateUser({ _id, fullname, phone, address, image, role }) {
+      const result = await User.findByIdAndUpdate(
+         _id,
+         filterUndefinedOrNullFields({ fullname, phone, address, image, role })
+      );
+
+      return result;
    }
 }
 

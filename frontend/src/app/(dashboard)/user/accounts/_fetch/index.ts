@@ -1,6 +1,6 @@
 import axiosInstance from '~/axios/axiosInstance';
 
-export const fetchCategory = async ({
+export const fetchAccount = async ({
    page,
    limit,
    filter
@@ -9,7 +9,7 @@ export const fetchCategory = async ({
    limit?: number;
    filter?: string;
 }) => {
-   const response = await axiosInstance.get('/category', {
+   const response = await axiosInstance.get('/users', {
       params: {
          page,
          limit,
@@ -19,29 +19,29 @@ export const fetchCategory = async ({
    return { result: response?.data?.metadata, pagination: response?.data?.pagination };
 };
 
-export const createCategory = ({ name, image }: any) => {
-   const formData = new FormData();
-   formData.append('name', name);
-   formData.append('image', image?.[0]);
-   return axiosInstance.post('/category', formData, {
-      headers: {
-         'Content-Type': 'multipart/form-data'
-      }
+export const register = ({ username, password, fullname, phone, address }: any) => {
+   return axiosInstance.post('/auth/register', {
+      username,
+      password,
+      fullname,
+      phone,
+      address
    });
 };
 
-export const updateCategory = ({ _id, name, image }: any) => {
-   const formData = new FormData();
-   formData.append('_id', _id);
-   formData.append('name', name);
-   formData.append('image', image?.[0]);
-   return axiosInstance.put('/category', formData, {
-      headers: {
-         'Content-Type': 'multipart/form-data'
-      }
+export const changePassword = ({ username, password }: any) => {
+   return axiosInstance.post('/auth/change-password', {
+      username,
+      password
    });
 };
-
-export const deleteCategory = (_id: any) => {
-   return axiosInstance.delete(`/category/${_id}`);
+export const updateAccount = ({ _id, fullname, phone, address, image, role }: any) => {
+   return axiosInstance.put('/users', {
+      _id,
+      fullname,
+      phone,
+      address,
+      image,
+      role
+   });
 };

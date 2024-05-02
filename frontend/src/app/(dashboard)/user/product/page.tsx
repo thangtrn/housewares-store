@@ -28,6 +28,7 @@ import tw from '~/lib/tw';
 import { IProduct } from '~/interfaces/schema.interfaces';
 import Link from 'next/link';
 import formatPrice from '~/utils/formatPrice';
+import { toast } from 'react-toastify';
 
 const formId = 'submit-product';
 
@@ -65,27 +66,52 @@ const ProductPage = () => {
    const createMutation = useMutation({
       mutationFn: (data) => {
          return createProduct(data);
+      },
+      onSuccess: () => {
+         refetch();
+         onClose();
+         toast.success('Tạo mới thành công.');
+      },
+      onError: () => {
+         refetch();
+         onClose();
+         toast.error('Đã có lỗi vui lòng thử lại sau.');
       }
    });
 
    const updateMutation = useMutation({
       mutationFn: (data) => {
          return updateProduct(data as any);
+      },
+      onSuccess: () => {
+         refetch();
+         onClose();
+         toast.success('Cập nhật thành công.');
+      },
+      onError: () => {
+         refetch();
+         onClose();
+         toast.error('Đã có lỗi vui lòng thử lại sau.');
       }
    });
 
    const deleteMutation = useMutation({
       mutationFn: (data) => {
          return deleteProduct(data);
+      },
+      onSuccess: () => {
+         refetch();
+         onClose();
+         toast.success('Xoá thành công.');
+      },
+      onError: () => {
+         refetch();
+         onClose();
+         toast.error('Đã có lỗi vui lòng thử lại sau.');
       }
    });
 
    // -------------- handler --------------
-
-   const onMutationSuccess = () => {
-      refetch();
-      onClose();
-   };
 
    const handleOpen = (modalType?: ModalType, payload?: IProduct) => {
       setModalType(modalType);
@@ -96,22 +122,16 @@ const ProductPage = () => {
    };
 
    const handleCreate = (data: any) => {
-      createMutation.mutate(data, {
-         onSuccess: onMutationSuccess
-      });
+      createMutation.mutate(data);
    };
 
    const handleUpdate = (data: any) => {
-      updateMutation.mutate(data, {
-         onSuccess: onMutationSuccess
-      });
+      updateMutation.mutate(data);
    };
 
    const handleDelete = (e: React.FormEvent) => {
       e.preventDefault();
-      deleteMutation.mutate(payload?._id as any, {
-         onSuccess: onMutationSuccess
-      });
+      deleteMutation.mutate(payload?._id as any);
    };
 
    const renderModal = (modalType: ModalType) => {

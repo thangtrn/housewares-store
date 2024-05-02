@@ -60,6 +60,16 @@
    .image-contain > img {
       @apply h-full w-full object-contain;
    }
+
+   .description-product .sun-editor {
+      border: none;
+   }
+   .description-product .se-resizing-bar {
+      display: none;
+   }
+   .description-product .se-wrapper-inner {
+      padding: 0;
+   }
 }
 
 @layer utilities {

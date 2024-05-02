@@ -4,7 +4,6 @@ import uploader from '~/middlewares/uploader';
 import CategoryRepository from '~/repositories/category.repository';
 import ImageRepository from '~/repositories/image.repository';
 import { CloudImage } from '~/types/image';
-import { Pagination } from '~/types/page';
 import OkResponse from '~/utils/response/response';
 
 @Controller('/category')

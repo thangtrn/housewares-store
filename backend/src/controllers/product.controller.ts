@@ -22,6 +22,13 @@ class ProductController {
       });
    }
 
+   @Get('/:id')
+   async getProductById(req: Request, res: Response) {
+      const _id = req.params.id;
+      const result = await this.productRepo.getProductById(_id);
+      return OkResponse(res, { metadata: result });
+   }
+
    @Post('/', uploader.array('image'))
    async createProduct(req: Request, res: Response) {
       const { name, category, price, quantity, detail, description } = req.body;
@@ -68,6 +75,26 @@ class ProductController {
       const result = await this.productRepo.deleteProduct(_id);
       return OkResponse(res, { metadata: result });
    }
+
+   @Get('/search')
+   async searchProduct(req: Request, res: Response) {
+      const { page = 1, limit = 20, name = '', fromPrice, toPrice, sort = 'createdAt' } = req.query;
+      const { result, pagination } = await this.productRepo.searchProduct({
+         page,
+         limit,
+         name,
+         fromPrice,
+         toPrice,
+         sort
+      } as any);
+      return OkResponse(res, { metadata: result, pagination });
+   }
+
+   // @Get('/suggestion')
+   // async getSuggestionProduct(req: Request, res: Response) {
+   //    const result = await this.productRepo.getSuggestionProduct();
+   //    return OkResponse(res, { metadata: result });
+   // }
 }
 
 export default ProductController;

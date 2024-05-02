@@ -1,6 +1,6 @@
 import React from 'react';
 import ProductCard from '~/app/(main)/_components/ProductCard/ProductCard';
-import { IProduct } from '~/interfaces/product.interfaces';
+import { IProduct } from '~/interfaces/schema.interfaces';
 
 interface ProductListProps {
    title: string;

@@ -1,6 +1,6 @@
 export const ROLES = {
-   admin: 'Nhân viên',
-   staff: 'staff'
+   admin: 'Quản lý',
+   staff: 'Nhân viên'
 };
 
 export const ORDER_STATUS = {

@@ -3,15 +3,16 @@ import tw from '~/lib/tw';
 
 interface RowProps {
    className?: string;
-   data: string[];
+   title: string;
+   content: string;
 }
 
-const Row: React.FC<RowProps> = ({ data }) => {
+const Row: React.FC<RowProps> = ({ title, content }) => {
    return (
       <tr className='border-b odd:bg-[--gray-200-color] even:bg-white'>
-         <td className='w-1/3 px-4 py-3 font-medium text-gray-900'>{data[0]}</td>
+         <td className='w-1/3 px-4 py-3 font-medium text-gray-900'>{title}</td>
          <td className='w-2/3 px-4 py-3'>
-            <div dangerouslySetInnerHTML={{ __html: data[1] }} />
+            <div>{content}</div>
          </td>
       </tr>
    );
@@ -19,7 +20,7 @@ const Row: React.FC<RowProps> = ({ data }) => {
 
 interface TableProps {
    className?: string;
-   data: string[][];
+   data: any;
    children?: React.ReactNode;
 }
 
@@ -27,9 +28,10 @@ const Table: React.FC<TableProps> = ({ className, data, children }) => {
    return (
       <table className={tw('w-full rounded-md text-left text-sm text-gray-500', className)}>
          <tbody>
-            {data.map((item, index) => (
-               <Row key={index} data={item} />
-            ))}
+            <Row title='Thương hiệu' content={data?.brand} />
+            <Row title='Kích thước' content={data?.size} />
+            <Row title='Màu sắc' content={data?.color} />
+            <Row title='Xuất xứ' content={data?.origin} />
          </tbody>
       </table>
    );

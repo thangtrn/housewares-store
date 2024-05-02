@@ -18,23 +18,24 @@ import { CirclePlus, Eye, RotateCcw, Search, SquarePen, Trash2 } from 'lucide-re
 import ButtonUI from '~/components/ButtonUI';
 import ModalUI, { ModalType } from '~/components/ModalUI';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
-import { createCategory, deleteCategory, fetchCategory, updateCategory } from './_fetch';
-import { ICategory } from '~/interfaces/schema.interfaces';
+import { register, fetchAccount, updateAccount } from './_fetch';
+import { IUser } from '~/interfaces/schema.interfaces';
 import EmptyStates from '~/components/EmptyStates';
 import FormHandler from './_components/FormHandler';
 import { IPagination } from '~/interfaces/pagination.interfaces';
 import tw from '~/lib/tw';
+import { toast } from 'react-toastify';
 
-const formId = 'submit-category';
+const formId = 'submit-account';
 
 export interface CategoryQueryData {
-   result: ICategory[];
+   result: IUser[];
    pagination: IPagination;
 }
 
 const AccountsPage = () => {
    // -------------- state --------------
-   const [payload, setPayload] = useState<ICategory | undefined>();
+   const [payload, setPayload] = useState<IUser | undefined>();
    const [modalType, setModalType] = useState<ModalType>(null);
    const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
@@ -48,7 +49,7 @@ const AccountsPage = () => {
 
    const { data, isLoading, isRefetching, refetch } = useQuery<CategoryQueryData>({
       queryKey: ['/category', pagination, filter],
-      queryFn: () => fetchCategory({ page: pagination.page, limit: pagination.limit, filter }),
+      queryFn: () => fetchAccount({ page: pagination.page, limit: pagination.limit, filter }),
       placeholderData: keepPreviousData
    });
 
@@ -60,30 +61,29 @@ const AccountsPage = () => {
 
    const createMutation = useMutation({
       mutationFn: (data) => {
-         return createCategory(data);
+         return register(data);
+      },
+      onSuccess: () => {
+         refetch();
+         onClose();
+         toast.success('Tạo mới thành công.');
+      },
+      onError: () => {
+         refetch();
+         onClose();
+         toast.error('Đã có lỗi vui lòng thử lại sau.');
       }
    });
 
    const updateMutation = useMutation({
       mutationFn: (data) => {
-         return updateCategory(data);
-      }
-   });
-
-   const deleteMutation = useMutation({
-      mutationFn: (data) => {
-         return deleteCategory(data);
+         return updateAccount(data);
       }
    });
 
    // -------------- handler --------------
 
-   const onMutationSuccess = () => {
-      refetch();
-      onClose();
-   };
-
-   const handleOpen = (modalType?: ModalType, payload?: ICategory) => {
+   const handleOpen = (modalType?: ModalType, payload?: IUser) => {
       setModalType(modalType);
       if (payload) {
          setPayload(payload);
@@ -92,31 +92,15 @@ const AccountsPage = () => {
    };
 
    const handleCreate = (data: any) => {
-      createMutation.mutate(data, {
-         onSuccess: onMutationSuccess
-      });
+      createMutation.mutate(data);
    };
 
    const handleUpdate = (data: any) => {
-      updateMutation.mutate(data, {
-         onSuccess: onMutationSuccess
-      });
-   };
-
-   const handleDelete = (e: React.FormEvent) => {
-      e.preventDefault();
-      deleteMutation.mutate(payload?._id as any, {
-         onSuccess: onMutationSuccess
-      });
+      updateMutation.mutate(data);
    };
 
    const renderModal = (modalType: ModalType) => {
       if (modalType === 'delete') {
-         return (
-            <form id={formId} onSubmit={handleDelete}>
-               Bạn có chặc muốn xoá danh mục <span className='font-bold'>{payload?.name}</span> này?
-            </form>
-         );
       } else {
          const handleSubmit = (data: any) => {
             if (modalType === 'create') {
@@ -194,9 +178,12 @@ const AccountsPage = () => {
             }}
          >
             <TableHeader>
-               <TableColumn width='10%'>_id</TableColumn>
-               <TableColumn width='30%'>Danh mục</TableColumn>
                <TableColumn>Hình ảnh</TableColumn>
+               <TableColumn width='30%'>Họ tên</TableColumn>
+               <TableColumn>Tài khoản</TableColumn>
+               <TableColumn>Quyền</TableColumn>
+               <TableColumn>Số điện thoại</TableColumn>
+               <TableColumn>Địa chỉ</TableColumn>
                <TableColumn width={136}>Thao tác</TableColumn>
             </TableHeader>
             <TableBody
@@ -207,18 +194,19 @@ const AccountsPage = () => {
             >
                {(item) => (
                   <TableRow key={item?._id}>
-                     <TableCell>{item?._id}</TableCell>
-                     <TableCell>{item.name}</TableCell>
                      <TableCell>
-                        {!!item.image?.imageUrl && (
-                           <Avatar
-                              src={item.image?.imageUrl}
-                              isBordered
-                              radius='sm'
-                              className='text-large h-16 w-16'
-                           />
-                        )}
+                        <Avatar
+                           src={item?.image}
+                           isBordered
+                           radius='sm'
+                           className='text-large h-16 w-16'
+                        />
                      </TableCell>
+                     <TableCell>{item?.fullname}</TableCell>
+                     <TableCell>{item?.account?.username}</TableCell>
+                     <TableCell>{item?.role}</TableCell>
+                     <TableCell>{item?.phone}</TableCell>
+                     <TableCell>{item?.address}</TableCell>
                      <TableCell>
                         <div className='flex gap-2'>
                            <ButtonUI
@@ -276,9 +264,7 @@ const AccountsPage = () => {
                   setPayload(undefined);
                }
             }}
-            isLoading={
-               createMutation.isPending || deleteMutation.isPending || updateMutation.isPending
-            }
+            isLoading={createMutation.isPending || updateMutation.isPending}
             formId={formId}
          >
             {renderModal}

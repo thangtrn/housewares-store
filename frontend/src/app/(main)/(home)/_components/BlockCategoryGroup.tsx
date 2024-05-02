@@ -8,11 +8,11 @@ interface BlockCategoryCardProps {
    title: string;
 }
 
-const BlockCategoryCard: React.FC<BlockCategoryCardProps> = ({ href, image, title }) => {
+const BlockCategoryCard: React.FC<BlockCategoryCardProps> = ({ href, image = '', title }) => {
    return (
       <Link
          href={href}
-         className='flex cursor-pointer items-center gap-2 p-2 outline outline-1 outline-[--gray-300-color] transition-colors hover:text-[--red-color] hover:drop-shadow-md'
+         className='flex cursor-pointer items-center gap-2 p-2 outline outline-1 outline-[--gray-300-color] transition-colors hover:text-[--red-color]'
       >
          <picture className='image-cover h-24 w-24 flex-none'>
             <Image width={512} height={512} src={image} alt='' />

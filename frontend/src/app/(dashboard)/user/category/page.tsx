@@ -24,6 +24,7 @@ import EmptyStates from '~/components/EmptyStates';
 import FormHandler from './_components/FormHandler';
 import { IPagination } from '~/interfaces/pagination.interfaces';
 import tw from '~/lib/tw';
+import { toast } from 'react-toastify';
 
 const formId = 'submit-category';
 
@@ -61,27 +62,52 @@ const CategoryPage = () => {
    const createMutation = useMutation({
       mutationFn: (data) => {
          return createCategory(data);
+      },
+      onSuccess: () => {
+         refetch();
+         onClose();
+         toast.success('Tạo mới thành công.');
+      },
+      onError: () => {
+         refetch();
+         onClose();
+         toast.error('Đã có lỗi vui lòng thử lại sau.');
       }
    });
 
    const updateMutation = useMutation({
       mutationFn: (data) => {
          return updateCategory(data);
+      },
+      onSuccess: () => {
+         refetch();
+         onClose();
+         toast.success('Cập nhật thành công.');
+      },
+      onError: () => {
+         refetch();
+         onClose();
+         toast.error('Đã có lỗi vui lòng thử lại sau.');
       }
    });
 
    const deleteMutation = useMutation({
       mutationFn: (data) => {
          return deleteCategory(data);
+      },
+      onSuccess: () => {
+         refetch();
+         onClose();
+         toast.success('Xoá thành công.');
+      },
+      onError: () => {
+         refetch();
+         onClose();
+         toast.error('Đã có lỗi vui lòng thử lại sau.');
       }
    });
 
    // -------------- handler --------------
-
-   const onMutationSuccess = () => {
-      refetch();
-      onClose();
-   };
 
    const handleOpen = (modalType?: ModalType, payload?: ICategory) => {
       setModalType(modalType);
@@ -92,22 +118,16 @@ const CategoryPage = () => {
    };
 
    const handleCreate = (data: any) => {
-      createMutation.mutate(data, {
-         onSuccess: onMutationSuccess
-      });
+      createMutation.mutate(data);
    };
 
    const handleUpdate = (data: any) => {
-      updateMutation.mutate(data, {
-         onSuccess: onMutationSuccess
-      });
+      updateMutation.mutate(data);
    };
 
    const handleDelete = (e: React.FormEvent) => {
       e.preventDefault();
-      deleteMutation.mutate(payload?._id as any, {
-         onSuccess: onMutationSuccess
-      });
+      deleteMutation.mutate(payload?._id as any);
    };
 
    const renderModal = (modalType: ModalType) => {

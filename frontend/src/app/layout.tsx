@@ -1,5 +1,6 @@
 import '~/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
+import 'suneditor/dist/css/suneditor.min.css';
 
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';

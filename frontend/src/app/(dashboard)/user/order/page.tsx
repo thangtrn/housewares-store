@@ -57,7 +57,7 @@ export interface OrderQueryData {
 const OrderPage = () => {
    const [pagination, setPagination] = useState<IPagination>({
       page: 1,
-      limit: 2
+      limit: 10
    });
 
    const { data, isLoading, isRefetching, refetch } = useQuery<OrderQueryData>({

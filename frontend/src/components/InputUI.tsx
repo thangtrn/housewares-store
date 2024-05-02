@@ -63,7 +63,7 @@ const InputPassword: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
          <div className='relative'>
             <input
                ref={ref}
-               type='text'
+               type={isVisible ? 'text' : 'password'}
                className={tw(
                   'transition-ease block w-full rounded border-[1.5px] p-2.5 pr-8 text-sm text-gray-900 outline-none focus:border-gray-900',
                   className,

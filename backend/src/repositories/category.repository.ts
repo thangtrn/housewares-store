@@ -4,7 +4,7 @@ import filterUndefinedOrNullFields from '~/utils/filterUndefineOrNull';
 import { BadRequestException, NotFoundException } from '~/utils/response';
 
 class CategoryRepository {
-   async getAllCategory({ page, limit, filter }) {
+   async getAllCategory({ page, limit, filter = '' }) {
       const filterEl = {
          name: {
             $regex: `.*${filter}.*`,

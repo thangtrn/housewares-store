@@ -8,7 +8,7 @@ class OrderRepository {
 
       if (!page) {
          const result = await Order.find(filter)
-            ?.sort('createdAt')
+            ?.sort({ createdAt: -1 })
             ?.populate({
                path: 'orderBy'
             })
@@ -22,7 +22,7 @@ class OrderRepository {
       }
 
       const result = await Order.find(filter)
-         .sort('createdAt')
+         .sort({ createdAt: -1 })
          .populate({
             path: 'orderBy'
          })
