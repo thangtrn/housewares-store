@@ -11,9 +11,8 @@ import Table from './_components/Table';
 import ActionGroup from './_components/ActionGroup';
 import ProductCard from '~/app/(main)/_components/ProductCard/ProductCard';
 import EmptyStates from '~/components/EmptyStates';
-import { fetchProductById, fetchProductSuggestion } from './_fetch';
+import { fetchProductById } from './_fetch';
 import { IProduct } from '~/interfaces/schema.interfaces';
-import SunEditor from 'suneditor-react';
 import Description from './_components/Description';
 
 const ProductDetailPage: React.FC<ServerProps> = async ({ params }) => {
@@ -52,7 +51,7 @@ const ProductDetailPage: React.FC<ServerProps> = async ({ params }) => {
                   Giá: {formatPrice(productData?.price)}
                </h4>
 
-               <ActionGroup />
+               <ActionGroup data={productData} />
 
                <div className='!mt-5 border-t border-dashed pt-3'>
                   <h4 className='mb-2 text-xl font-medium'>Thông tin chi tiết</h4>

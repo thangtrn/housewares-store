@@ -38,9 +38,9 @@ class AuthController {
       });
    }
 
-   @Get('/me', permission())
+   @Get('/me')
    async test(req: Request, res: Response) {
-      return OkResponse(res, { metadata: req.user });
+      return OkResponse(res, { metadata: req.user || null });
    }
 }
 export default AuthController;

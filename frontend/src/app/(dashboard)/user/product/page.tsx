@@ -32,7 +32,7 @@ import { toast } from 'react-toastify';
 
 const formId = 'submit-product';
 
-interface ProductQueryData {
+export interface ProductQueryData {
    result: IProduct[];
    pagination: IPagination;
 }

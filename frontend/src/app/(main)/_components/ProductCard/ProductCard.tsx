@@ -9,6 +9,7 @@ export interface ProductCardProps extends IProduct {}
 
 const ProductCard: React.FC<ProductCardProps> = (props) => {
    const { _id, name, images, category, price, quantity, createdAt, description } = props;
+
    return (
       <li className='border-item group flex flex-col rounded-md bg-white hover:shadow-lg'>
          <Link href={`/product/${_id}`} className='flex justify-center p-2 md:p-3' title={name}>

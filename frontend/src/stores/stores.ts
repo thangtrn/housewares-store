@@ -1,8 +1,17 @@
 import { create } from 'zustand';
-import { AuthSlice, authSlice } from './authSlice';
+import { persist, devtools } from 'zustand/middleware';
 
-const useStores = create<AuthSlice>((...a) => ({
-   ...authSlice(...a)
-}));
+import { AuthSlice, authSlice } from './authSlice';
+import { CartSlice, cartSlice } from './cartSlice';
+
+const useStores = create<AuthSlice & CartSlice>(
+   persist(
+      devtools((...a) => ({
+         ...authSlice(...a),
+         ...cartSlice(...a)
+      })),
+      { name: 'cart-storage', partialize: (state) => ({ cart: state.cart }) }
+   )
+);
 
 export default useStores;

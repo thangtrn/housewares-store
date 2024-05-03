@@ -2,11 +2,18 @@
 import React from 'react';
 import { Button, Tooltip } from '@nextui-org/react';
 import { ShoppingCart } from 'lucide-react';
-import { IProduct } from '~/interfaces/product.interfaces';
+import { IProduct } from '~/interfaces/schema.interfaces';
+import useStores from '~/stores/stores';
+import { toast } from 'react-toastify';
 
-export interface ProductCardProps extends IProduct {}
+const CartButton = ({ data }: { data: IProduct }) => {
+   const { addToCart } = useStores();
 
-const CartButton = ({ data: IProduct }) => {
+   const handleAddToCart = () => {
+      addToCart(data);
+      toast.success('Đã thêm sản phẩm vào giỏ hàng');
+   };
+
    return (
       <Tooltip
          showArrow={true}
@@ -15,7 +22,7 @@ const CartButton = ({ data: IProduct }) => {
          className='rounded'
          closeDelay={0}
       >
-         <Button isIconOnly size='sm' className='rounded'>
+         <Button isIconOnly size='sm' className='rounded' onClick={handleAddToCart}>
             <ShoppingCart size={16} />
          </Button>
       </Tooltip>

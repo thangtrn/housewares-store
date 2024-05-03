@@ -4,6 +4,7 @@ import { Button, Input, Radio, RadioGroup, Slider } from '@nextui-org/react';
 import tw from '~/lib/tw';
 import formatPrice from '~/utils/formatPrice';
 import { Divider } from '@nextui-org/react';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 interface BlockFilterProps {
    title?: string;
@@ -41,43 +42,72 @@ const DisplayPrice: React.FC<DisplayPrice> = ({ price }) => {
 };
 
 const Fillterbar = () => {
-   const [priceValue, setPriceValue] = useState<number[]>([0, 20000000]);
+   const pathname = usePathname();
+   const searchParams = useSearchParams();
+   const [filter, setFilter] = useState({
+      name: searchParams.get('query') || '',
+      page: Number(searchParams.get('page')) || 1,
+      limit: Number(searchParams.get('limit')) || 25,
+      fromPrice: Number(searchParams.get('fromPrice')) || 0,
+      toPrice: Number(searchParams.get('toPrice')) || 20000000,
+      sort: searchParams.get('sort') || 'createdAt'
+   });
+
+   const handleFilter = () => {
+      const params = new URLSearchParams(window.location.search);
+
+      params.set('query', filter.name);
+      params.set('fromPrice', filter.fromPrice.toString());
+      params.set('toPrice', filter.toPrice.toString());
+      params.set('sort', filter.sort.toString());
+      params.set('page', filter.page.toString());
+      params.set('limit', filter.limit.toString());
+
+      const newUrl = `${pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+   };
 
    return (
       <div className={'section sticky top-[calc(64px+16px)] flex flex-col gap-2 bg-white p-3'}>
          <BlockFilter title='Khoảng giá' border>
             <div className='mb-2 flex items-center'>
-               <DisplayPrice price={priceValue[0]} />
+               <DisplayPrice price={filter.fromPrice} />
                <Divider className='w-2' />
-               <DisplayPrice price={priceValue[1]} />
+               <DisplayPrice price={filter.toPrice} />
             </div>
             <Slider
                showTooltip
                aria-label='Khoảng giá'
                size='sm'
                minValue={0}
-               onChange={(value) => setPriceValue(value as number[])}
-               value={priceValue}
                maxValue={20000000}
-               defaultValue={priceValue}
+               onChange={(value) =>
+                  setFilter((prev) => ({ ...prev, fromPrice: value[0], toPrice: value[1] }))
+               }
+               value={[filter.fromPrice, filter.toPrice]}
+               defaultValue={[filter.fromPrice, filter.toPrice]}
                tooltipProps={{
                   placement: 'bottom'
                }}
             />
          </BlockFilter>
          <BlockFilter title='Sắp xếp' border>
-            <RadioGroup size='sm'>
-               <Radio value='asc'>Gía tăng đần</Radio>
-               <Radio value='desc'>Giá giảm dần</Radio>
-               <Radio value='date'>Ngày ra mắt</Radio>
-               <Radio value='pupulate'>Bán chạy</Radio>
+            <RadioGroup
+               size='sm'
+               defaultValue={filter.sort}
+               onValueChange={(value) => setFilter((prev) => ({ ...prev, sort: value }))}
+            >
+               <Radio value='createdAt'>Ngày ra mắt</Radio>
+               <Radio value='price-asc'>Gía tăng đần</Radio>
+               <Radio value='price-desc'>Giá giảm dần</Radio>
+               <Radio value='populate'>Bán chạy</Radio>
             </RadioGroup>
          </BlockFilter>
          <BlockFilter className='flex justify-end gap-2' wrapperClassName='pb-0'>
-            <Button size='sm' variant='bordered' className='border-1 rounded'>
+            {/* <Button size='sm' variant='bordered' className='border-1 rounded'>
                Xoá bộ lọc
-            </Button>
-            <Button size='sm' color='primary' className='rounded'>
+            </Button> */}
+            <Button size='sm' color='primary' className='rounded' onClick={handleFilter}>
                Áp dụng
             </Button>
          </BlockFilter>

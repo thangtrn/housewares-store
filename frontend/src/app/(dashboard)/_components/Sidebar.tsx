@@ -33,7 +33,6 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ href, icon, label }) => {
 };
 
 const adminSidebar = (role: string) => {
-   console.log('🚀 ~ adminSidebar ~ role:', role);
    if (!role || role !== 'admin') {
       return [];
    }

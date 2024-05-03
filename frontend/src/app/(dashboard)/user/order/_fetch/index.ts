@@ -19,15 +19,8 @@ export const fetchOrder = async ({
    return { result: response?.data?.metadata, pagination: response?.data?.pagination };
 };
 
-export const createOrder = ({ name, image }: any) => {
-   const formData = new FormData();
-   formData.append('name', name);
-   formData.append('image', image?.[0]);
-   return axiosInstance.post('/order', formData, {
-      headers: {
-         'Content-Type': 'multipart/form-data'
-      }
-   });
+export const createOrder = ({ items, orderBy, totalPrice, note, address, phone }: any) => {
+   return axiosInstance.post('/order', { items, orderBy, totalPrice, note, address, phone });
 };
 
 export const updateOrder = ({ _id, status }: any) => {

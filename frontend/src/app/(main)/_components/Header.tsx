@@ -1,6 +1,6 @@
 import React from 'react';
 import SearchBox from './SearchBox';
-import Action from './Action';
+import Action from '../../(dashboard)/_components/Action';
 import BrandLogo from '~/components/BrandLogo';
 
 const Header = () => {

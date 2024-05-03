@@ -9,6 +9,7 @@ import ButtonUI from '~/components/ButtonUI';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { Roles } from '~/interfaces';
+import { queryClient } from '~/provider/QueryProvider';
 
 const LoginPage = () => {
    const router = useRouter();
@@ -21,9 +22,12 @@ const LoginPage = () => {
 
    const mutation = useMutation({
       mutationFn: (data) => login(data as any),
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
          const isAdmin = data?.data?.metadata.role === Roles.ADMIN;
          router.push(isAdmin ? '/user' : '/');
+         await queryClient.refetchQueries({
+            queryKey: ['/auth/me']
+         });
          toast.success('Đăng nhập thành công');
       },
       onError: (error: any) => {

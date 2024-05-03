@@ -3,14 +3,18 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import axiosInstance from '~/axios/axiosInstance';
 import useStores from '~/stores/stores';
+import { LoadingOverState } from './LoadingState';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface ClientLayoutProps {
    children: React.ReactNode;
 }
 
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
-   const { user, setUser } = useStores();
-   const { data } = useQuery({
+   const pathname = usePathname();
+   const router = useRouter();
+   const { setUser } = useStores();
+   const { data, isLoading, isRefetching, isFetched } = useQuery({
       queryKey: ['/auth/me'],
       queryFn: async () => {
          const res = await axiosInstance.get('/auth/me');
@@ -18,13 +22,24 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
       }
    });
 
-   console.log('🚀 ~ user:', user);
-
    useEffect(() => {
       setUser(data);
-   }, [data, setUser]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [data]);
 
-   return children;
+   useEffect(() => {
+      if ((pathname.includes('/user') || pathname.includes('/cart')) && !data) {
+         router.push('/');
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [data, pathname]);
+
+   return (
+      <>
+         {(isLoading || isRefetching) && <LoadingOverState />}
+         {children}
+      </>
+   );
 };
 
 export default ClientLayout;

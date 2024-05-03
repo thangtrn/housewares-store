@@ -73,7 +73,7 @@ class ProductRepository {
             category,
             price,
             quantity,
-            detail: JSON.parse(detail),
+            detail,
             description
          })
       );
@@ -145,10 +145,13 @@ class ProductRepository {
       fromPrice?: number;
       toPrice?: number;
       sort?: string;
-   }): Promise<{ result: any; pagination: { page: number; limit: number; totalPage: number } }> {
+   }): Promise<{
+      result: any;
+      pagination: { page: number; limit: number; totalPage: number; totalItem?: number };
+   }> {
       const filterEl: any = {
          name: {
-            $regex: `.*${name}.*`,
+            $regex: `.*${name || ''}.*`,
             $options: 'i'
          }
       };
@@ -219,7 +222,8 @@ class ProductRepository {
          pagination: {
             page: Number(page),
             limit: Number(limit),
-            totalPage: Math.ceil(result.length / limit)
+            totalPage: Math.ceil(result.length / limit),
+            totalItem: result.length
          }
       };
    }

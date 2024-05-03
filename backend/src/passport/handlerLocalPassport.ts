@@ -10,7 +10,7 @@ const LocalStrategy = passportLocal.Strategy;
 const handlerLocalPassport = (app: Application) => {
    passport.use(
       new LocalStrategy(async (username, password, done) => {
-         const account = (await Account.findOne({ username })).toJSON();
+         const account = (await Account.findOne({ username }))?.toJSON();
          if (!account) {
             return done(new UnauthorizedException('Username or password is incorrect'));
          }
@@ -20,7 +20,7 @@ const handlerLocalPassport = (app: Application) => {
          if (storedPassword !== password) {
             return done(new UnauthorizedException('Username or password is incorrect'));
          } else {
-            const user = await User.findOne({ account: account?._id }).populate({
+            const user = await User.findOne({ account: account?._id })?.populate({
                path: 'account',
                select: { password: 0 }
             });
@@ -36,11 +36,11 @@ const handlerLocalPassport = (app: Application) => {
    passport.deserializeUser(async function (_id, done) {
       try {
          const user = (
-            await User.findOne({ account: _id }).populate({
+            await User.findOne({ account: _id })?.populate({
                path: 'account',
                select: { password: 0 }
             })
-         ).toJSON();
+         )?.toJSON();
 
          if (!user) {
             done(new UnauthorizedException('Your session is invalid session'));
