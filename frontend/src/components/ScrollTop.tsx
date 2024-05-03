@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-const ClientLayout = () => {
+const ScrollTop = () => {
    const pathname = usePathname();
 
    useEffect(() => {
@@ -12,4 +12,4 @@ const ClientLayout = () => {
    return null;
 };
 
-export default ClientLayout;
+export default ScrollTop;

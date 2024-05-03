@@ -3,8 +3,9 @@ import { LayoutGrid, NotepadText, Package, ShoppingCart, User, Users } from 'luc
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useState } from 'react';
+import React from 'react';
 import tw from '~/lib/tw';
+import useStores from '~/stores/stores';
 
 export interface SidebarItemProps {
    href: string;
@@ -31,19 +32,12 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ href, icon, label }) => {
    );
 };
 
-const Sidebar = () => {
-   const [items] = useState<SidebarItemProps[]>([
-      {
-         href: '/user',
-         icon: <User size={20} />,
-         label: 'Thông tin cá nhân'
-      },
-      {
-         href: '/user/purchase',
-         icon: <NotepadText size={20} />,
-         label: 'Đơn hàng đã mua'
-      },
-      // admin
+const adminSidebar = (role: string) => {
+   console.log('🚀 ~ adminSidebar ~ role:', role);
+   if (!role || role !== 'admin') {
+      return [];
+   }
+   return [
       {
          href: '/user/category',
          icon: <LayoutGrid size={20} />,
@@ -64,7 +58,26 @@ const Sidebar = () => {
          icon: <Users size={20} />,
          label: 'Tài khoản'
       }
-   ]);
+   ];
+};
+
+const Sidebar = () => {
+   const user = useStores((state) => state.user);
+
+   const items = [
+      {
+         href: '/user',
+         icon: <User size={20} />,
+         label: 'Thông tin cá nhân'
+      },
+      {
+         href: '/user/purchase',
+         icon: <NotepadText size={20} />,
+         label: 'Đơn hàng đã mua'
+      },
+      // admin
+      ...adminSidebar(user?.role as string)
+   ];
 
    return (
       <aside className='fixed bottom-0 left-0 top-[--header-height] h-[calc(100vh-var(--header-height))] w-[--sidebar-width] overflow-y-auto border-r border-[--gray-300-color] bg-white'>

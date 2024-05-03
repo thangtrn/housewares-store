@@ -4,8 +4,13 @@ import Image from 'next/image';
 import { toast } from 'react-toastify';
 import InputUI, { InputPasswordUI } from '~/components/InputUI';
 import ButtonUI from '~/components/ButtonUI';
+import useStores from '~/stores/stores';
+import InforForm from './_components/InforForm';
+import AccountForm from './_components/AccountForm';
+import LoadingState from '~/components/LoadingState';
 
 const InfoPage = () => {
+   const user = useStores((state) => state.user);
    return (
       <section className='section-card'>
          <div className='flex'>
@@ -15,7 +20,7 @@ const InfoPage = () => {
                      <Image
                         width={300}
                         height={300}
-                        src='/assets/default-avatar.jpg'
+                        src={user?.image || '/assets/default-avatar.jpg'}
                         alt='avatar image'
                      />
                   </picture>
@@ -29,36 +34,14 @@ const InfoPage = () => {
                </ButtonUI>
             </div>
             <div className='basis-8/12 space-y-5'>
-               <div>
-                  <h2 className='mb-2 text-lg font-medium'>Thông tin cá nhân</h2>
-                  <div className='grid grid-cols-2 gap-3'>
-                     <InputUI label='Họ và tên' />
-                     <InputUI label='Số điện thoại' />
-                     <InputUI label='Địa chỉ' classNames={{ wrapper: 'col-span-2' }} />
-                  </div>
-               </div>
-               <div className='flex justify-end'>
-                  <ButtonUI className='w-40 bg-[--green-color]' color='primary'>
-                     Cập nhật
-                  </ButtonUI>
-               </div>
-               <div>
-                  <h2 className='mb-2 text-lg font-medium'>Tài khoản</h2>
-                  <div className='grid grid-cols-2 gap-3'>
-                     <InputUI
-                        label='Tên đăng nhập'
-                        classNames={{ wrapper: 'col-span-2' }}
-                        disabled
-                     />
-                     <InputPasswordUI label='Mật khẩu' />
-                     <InputPasswordUI label='Nhập lại mật khẩu' />
-                  </div>
-               </div>
-               <div className='flex justify-end'>
-                  <ButtonUI className='w-40 bg-[--green-color]' color='primary'>
-                     Đổi mật khẩu
-                  </ButtonUI>
-               </div>
+               {user ? (
+                  <>
+                     <InforForm />
+                     <AccountForm />
+                  </>
+               ) : (
+                  <LoadingState />
+               )}
             </div>
          </div>
       </section>

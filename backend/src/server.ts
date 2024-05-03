@@ -6,25 +6,30 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import connectMongoSession from 'connect-mongodb-session';
 
-import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from '~/config';
+import passport from 'passport';
+
+import { LOG_FORMAT, MONGOOSE_URI, NODE_ENV, ORIGIN, PORT, SESSION_KEY } from '~/config';
 import connectMongodb from '~/config/db';
 import controllerRegister from '~/utils/controllerRegister';
 import { handleError } from '~/middlewares/handleError';
 
 import UserController from '~/controllers/user.controller';
-import cookie from 'cookie-parser';
 import AuthController from '~/controllers/auth.controller';
 import ProductController from '~/controllers/product.controller';
-import CategoryController from './controllers/category.controller';
-import OrderController from './controllers/order.controller';
-import UploadController from './controllers/upload.controller';
-import HomeController from './controllers/home.controller';
+import CategoryController from '~/controllers/category.controller';
+import OrderController from '~/controllers/order.controller';
+import UploadController from '~/controllers/upload.controller';
+import HomeController from '~/controllers/home.controller';
+import handlerLocalPassport from '~/passport/handlerLocalPassport';
 
 class App {
    protected app: Application;
    protected env: string;
    protected port: string | number;
+   protected MongoDBStore = connectMongoSession(session);
 
    constructor() {
       this.app = express();
@@ -44,13 +49,36 @@ class App {
 
    private initializeMiddlewares = () => {
       this.app.use(morgan(LOG_FORMAT));
-      this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
-      this.app.use(helmet());
-      this.app.use(compression());
+      this.app.use(cors({ origin: ORIGIN, credentials: true }));
       this.app.use(express.json());
-      this.app.use(cookie());
       this.app.use(express.urlencoded({ extended: true }));
       this.app.use(cookieParser());
+      this.app.use(helmet());
+      this.app.use(compression());
+
+      const store = new this.MongoDBStore({
+         uri: MONGOOSE_URI,
+         collection: 'session'
+      });
+
+      this.app.use(
+         session({
+            store: store,
+            secret: SESSION_KEY,
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+               maxAge: 7 * 24 * 60 * 60 * 1000, // 1 tuần
+               httpOnly: true,
+               path: '/'
+            }
+         })
+      );
+
+      this.app.use(passport.initialize());
+      this.app.use(passport.session());
+
+      handlerLocalPassport(this.app);
    };
 
    private initializeRoutes = () => {

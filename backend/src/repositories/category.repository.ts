@@ -4,7 +4,7 @@ import filterUndefinedOrNullFields from '~/utils/filterUndefineOrNull';
 import { BadRequestException, NotFoundException } from '~/utils/response';
 
 class CategoryRepository {
-   async getAllCategory({ page, limit, filter = '' }) {
+   async getAllCategory({ page, limit, filter }) {
       const filterEl = {
          name: {
             $regex: `.*${filter}.*`,
@@ -50,7 +50,10 @@ class CategoryRepository {
       return result;
    }
 
-   async deleteCategory(_id) {
+   async deleteCategory(_id): Promise<any> {
+      if (!_id) {
+         throw new BadRequestException('Category _id must be required.');
+      }
       const isExists = await Product.find({ category: _id });
       if (isExists || isExists.length > 0) {
          throw new BadRequestException('Some products using this category _id.');

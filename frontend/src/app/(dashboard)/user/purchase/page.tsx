@@ -57,7 +57,7 @@ export interface OrderQueryData {
 const PurchasePage = () => {
    const [pagination, setPagination] = useState<IPagination>({
       page: 1,
-      limit: 2
+      limit: 10
    });
 
    const orderBy = '663249c40eb13ce23fb688d0';

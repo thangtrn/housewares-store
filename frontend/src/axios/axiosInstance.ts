@@ -5,9 +5,9 @@ const axiosInstance: AxiosInstance = axios.create({
    timeout: 10000,
    headers: {
       'Content-Type': 'application/json'
-   }
+   },
+   withCredentials: true
 });
-console.log('🚀 ~ process.env.API_URI:', process.env.API_URI);
 
 // Interceptors để xử lý các request trước khi chúng được gửi
 axiosInstance.interceptors.request.use(

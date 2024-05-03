@@ -11,6 +11,7 @@ import tw from '~/lib/tw';
 import UiProvider from '~/provider/UiProvider';
 import QueryProvider from '~/provider/QueryProvider';
 import ScrollTop from '~/components/ScrollTop';
+import ClientLayout from '~/components/ClientLayout';
 
 const roboto = Roboto({
    subsets: ['latin'],
@@ -46,7 +47,9 @@ export default function RootLayout({
                />
                <ScrollTop />
                <NextTopLoader color='var(--blue-color)' height={2} />
-               <UiProvider>{children}</UiProvider>
+               <UiProvider>
+                  <ClientLayout>{children}</ClientLayout>
+               </UiProvider>
             </QueryProvider>
          </body>
       </html>

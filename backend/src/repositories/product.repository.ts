@@ -124,7 +124,7 @@ class ProductRepository {
       return result;
    }
 
-   async deleteProduct(_id) {
+   async deleteProduct(_id): Promise<any> {
       if (!_id) {
          throw new BadRequestException('Product _id must be required.');
       }

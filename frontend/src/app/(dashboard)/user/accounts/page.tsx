@@ -78,6 +78,16 @@ const AccountsPage = () => {
    const updateMutation = useMutation({
       mutationFn: (data) => {
          return updateAccount(data);
+      },
+      onSuccess: () => {
+         refetch();
+         onClose();
+         toast.success('Cập nhật thành công.');
+      },
+      onError: () => {
+         refetch();
+         onClose();
+         toast.error('Đã có lỗi vui lòng thử lại sau.');
       }
    });
 
