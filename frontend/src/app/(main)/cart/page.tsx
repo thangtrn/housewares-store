@@ -64,7 +64,7 @@ const CartPage = () => {
    return (
       <>
          <Breadcrumb data={['Giỏ hàng']} className='mb-4' />
-         <section className='flex gap-4'>
+         <section className='flex flex-col gap-4 md:flex-row'>
             <div className='basis-9/12'>
                <CartList selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys} />
             </div>

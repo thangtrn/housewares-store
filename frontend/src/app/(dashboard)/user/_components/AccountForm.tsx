@@ -37,10 +37,10 @@ const AccountForm = () => {
       <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
          <div>
             <h2 className='mb-2 text-lg font-medium'>Tài khoản</h2>
-            <div className='grid grid-cols-2 gap-3'>
+            <div className='grid gap-3 md:grid-cols-2'>
                <InputUI
                   label='Tên đăng nhập'
-                  classNames={{ wrapper: 'col-span-2' }}
+                  classNames={{ wrapper: 'md:col-span-2' }}
                   disabled
                   {...register('username', { value: user?.account?.username })}
                />

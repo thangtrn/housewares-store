@@ -20,7 +20,8 @@ const EmblaCarousel: React.FC<EmblaCarouselProps> = ({ slides }) => {
    const { onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
 
    const variables = createVariables(
-      '[--slide-height:22.5rem]',
+      '[--slide-height:16.5rem]',
+      'md:[--slide-height:22.5rem]',
       '[--slide-spacing:1rem]',
       '[--slide-size:100%]'
    );

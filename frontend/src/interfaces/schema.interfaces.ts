@@ -32,6 +32,7 @@ export interface IProduct {
    quantity: number;
    createdAt: string;
    updatedAt: string;
+   sold?: number | string;
 }
 
 export interface IOrderItem {

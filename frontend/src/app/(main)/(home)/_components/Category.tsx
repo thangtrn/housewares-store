@@ -27,7 +27,7 @@ interface CategoryProps {
 
 const Category: React.FC<CategoryProps> = ({ categories }) => {
    return (
-      <ul className='basis-3/12 px-4'>
+      <ul className='hidden px-4 md:block md:basis-3/12'>
          {categories?.map((category, index) => (
             <CategoryItem key={index} href={category.href} content={category.content} />
          ))}

@@ -106,7 +106,7 @@ const PurchasePage = () => {
                            </div>
                         }
                         subtitle={
-                           <div className='mt-3 grid grid-cols-2 pl-2'>
+                           <div className='mt-3 grid gap-1 pl-2 md:grid-cols-2'>
                               <ul className='space-y-1'>
                                  <li>
                                     <span className='font-bold'>Mã đơn hàng:</span> {item?._id}

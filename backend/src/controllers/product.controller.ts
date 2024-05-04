@@ -24,7 +24,14 @@ class ProductController {
 
    @Get('/search')
    async searchProduct(req: Request, res: Response) {
-      const { page = 1, limit = 20, name = '', fromPrice, toPrice, sort = 'createdAt' } = req.query;
+      const {
+         page = 1,
+         limit = 20,
+         name = '',
+         fromPrice = 0,
+         toPrice,
+         sort = 'createdAt'
+      } = req.query;
       const { result, pagination } = await this.productRepo.searchProduct({
          page,
          limit,

@@ -1,6 +1,6 @@
-import Order from '~/models/order.model';
+import mongoose from 'mongoose';
 import Product from '~/models/product.model';
-import { OrderStatus } from '~/types/orderStatus';
+import { Pagination } from '~/types/page';
 import filterUndefinedOrNullFields from '~/utils/filterUndefineOrNull';
 import { BadRequestException, NotFoundException } from '~/utils/response';
 
@@ -43,26 +43,102 @@ class ProductRepository {
    }
 
    async getProductById(_id) {
-      const result = await Product.findById(_id)
-         .sort({ createdAt: -1 })
-         ?.populate({
-            path: 'images',
-            model: 'Image'
-         })
-         ?.populate({
-            path: 'category',
-            model: 'Category',
-            populate: {
-               path: 'image',
-               model: 'Image'
+      const result = await Product.aggregate([
+         {
+            $match: {
+               _id: new mongoose.Types.ObjectId(_id)
             }
-         });
+         },
+         {
+            $lookup: {
+               from: 'categories',
+               let: {
+                  categoryId: '$category'
+               },
+               pipeline: [
+                  {
+                     $match: {
+                        $expr: {
+                           $eq: ['$_id', '$$categoryId']
+                        }
+                     }
+                  }
+               ],
+               as: 'category'
+            }
+         },
+         {
+            $unwind: {
+               path: '$category',
+               preserveNullAndEmptyArrays: true
+            }
+         },
+         {
+            $lookup: {
+               from: 'images',
+               localField: 'images',
+               foreignField: '_id',
+               as: 'images'
+            }
+         },
+         {
+            $lookup: {
+               from: 'orders',
+               let: { productId: '$_id' },
+               pipeline: [
+                  {
+                     $unwind: '$items'
+                  },
+                  {
+                     $match: {
+                        $expr: {
+                           $eq: ['$items.product', '$$productId']
+                        }
+                     }
+                  },
+                  {
+                     $project: {
+                        items: 1
+                     }
+                  },
+                  {
+                     $replaceRoot: { newRoot: '$items' }
+                  }
+               ],
+               as: 'orderItems'
+            }
+         },
+         {
+            $project: {
+               _id: 1,
+               name: 1,
+               category: 1,
+               images: 1,
+               price: 1,
+               quantity: 1,
+               detail: 1,
+               description: 1,
+               createdAt: 1,
+               updatedAd: 1,
+               slug: 1,
+               sold: {
+                  $reduce: {
+                     input: '$orderItems',
+                     initialValue: 0,
+                     in: {
+                        $add: ['$$value', '$$this.quantity']
+                     }
+                  }
+               }
+            }
+         }
+      ]);
 
       if (!result) {
          throw new NotFoundException('Not found product with _id: ' + _id);
       }
 
-      return result;
+      return result?.[0];
    }
 
    async createProduct({ name, images, category, price, quantity, detail, description }) {
@@ -147,83 +223,187 @@ class ProductRepository {
       sort?: string;
    }): Promise<{
       result: any;
-      pagination: { page: number; limit: number; totalPage: number; totalItem?: number };
+      pagination: Pagination;
    }> {
-      const filterEl: any = {
-         name: {
-            $regex: `.*${name || ''}.*`,
-            $options: 'i'
+      const createPriceMatchFilter = (fromPrice: number, toPrice: number) => {
+         const matchPriceFilter: any = {
+            $match: {}
+         };
+
+         if (fromPrice && toPrice) {
+            matchPriceFilter.$match.price = {
+               $gte: Number(fromPrice),
+               $lte: Number(toPrice)
+            };
+         } else if (fromPrice !== null || fromPrice !== undefined) {
+            matchPriceFilter.$match.price = { $gte: Number(fromPrice) || 0 };
+         } else if (toPrice !== null || toPrice !== undefined) {
+            matchPriceFilter.$match.price = { $lte: Number(toPrice) || 0 };
          }
+         return matchPriceFilter;
       };
 
-      if (fromPrice !== undefined) {
-         filterEl.price = { $gte: fromPrice };
-      }
-
-      if (toPrice !== undefined) {
-         filterEl.price = { ...filterEl.price, $lte: toPrice };
-      }
-
-      let query = Product.find(filterEl);
-
-      if (sort === 'price-desc') {
-         query = query.sort({ price: -1 });
-      } else if (sort === 'price-asc') {
-         query = query.sort({ price: 1 });
-      } else if (sort === 'createdAt') {
-         query = query.sort({ createdAt: -1 });
-      }
-
-      const orders = await Order.find({
-         status: {
-            $nin: [OrderStatus.PENDING, OrderStatus.CANCELLED]
+      const createSortFilter = (sort) => {
+         if (sort === 'createdAt') {
+            return {
+               $sort: {
+                  createdAt: 1
+               }
+            };
+         } else if (sort === 'price-asc') {
+            return {
+               $sort: {
+                  price: 1
+               }
+            };
+         } else if (sort === 'price-desc') {
+            return {
+               $sort: {
+                  createdAt: -1
+               }
+            };
+         } else if (sort === 'populate') {
+            return {
+               $sort: {
+                  sold: 1
+               }
+            };
          }
-      }).populate('items.product');
+         return {};
+      };
 
-      const productSoldMap = new Map();
-      orders.forEach((order) => {
-         order.items.forEach((item) => {
-            const productId = item.product._id.toString();
-            const quantity = item.quantity;
-            if (productSoldMap.has(productId)) {
-               productSoldMap.set(productId, productSoldMap.get(productId) + quantity);
-            } else {
-               productSoldMap.set(productId, quantity);
+      const productSearchAggregate: any = [
+         {
+            $lookup: {
+               from: 'categories',
+               let: {
+                  categoryId: '$category'
+               },
+               pipeline: [
+                  {
+                     $match: {
+                        $expr: {
+                           $eq: ['$_id', '$$categoryId']
+                        }
+                     }
+                  }
+               ],
+               as: 'category'
             }
-         });
-      });
-
-      const result = await query
-         .populate({
-            path: 'images',
-            model: 'Image'
-         })
-         .populate({
-            path: 'category',
-            model: 'Category',
-            populate: {
-               path: 'image',
-               model: 'Image'
+         },
+         {
+            $unwind: {
+               path: '$category',
+               preserveNullAndEmptyArrays: true
             }
-         })
-         .skip((page - 1) * limit)
-         .limit(limit);
+         },
+         {
+            $match: {
+               $or: [
+                  {
+                     name: {
+                        $regex: `.*${name || ''}.*`,
+                        $options: 'i'
+                     }
+                  },
+                  {
+                     'category.name': {
+                        $regex: `.*${name || ''}.*`,
+                        $options: 'i'
+                     }
+                  }
+               ]
+            }
+         },
+         {
+            $lookup: {
+               from: 'images',
+               localField: 'images',
+               foreignField: '_id',
+               as: 'images'
+            }
+         },
+         {
+            $lookup: {
+               from: 'orders',
+               let: { productId: '$_id' },
+               pipeline: [
+                  {
+                     $unwind: '$items'
+                  },
+                  {
+                     $match: {
+                        $expr: {
+                           $eq: ['$items.product', '$$productId']
+                        }
+                     }
+                  },
+                  {
+                     $project: {
+                        items: 1
+                     }
+                  },
+                  {
+                     $replaceRoot: { newRoot: '$items' }
+                  }
+               ],
+               as: 'orderItems'
+            }
+         },
+         {
+            $project: {
+               _id: 1,
+               name: 1,
+               category: 1,
+               images: 1,
+               price: 1,
+               quantity: 1,
+               detail: 1,
+               description: 1,
+               createdAt: 1,
+               updatedAd: 1,
+               slug: 1,
+               sold: {
+                  $reduce: {
+                     input: '$orderItems',
+                     initialValue: 0,
+                     in: {
+                        $add: ['$$value', '$$this.quantity']
+                     }
+                  }
+               }
+            }
+         },
+         {
+            ...createPriceMatchFilter(fromPrice, toPrice)
+         },
+         {
+            ...createSortFilter(sort)
+         }
+      ];
 
-      if (sort === 'populate') {
-         result.sort((a: any, b: any) => {
-            const totalQuantityA = productSoldMap.get(a._id.toString()) || 0;
-            const totalQuantityB = productSoldMap.get(b._id.toString()) || 0;
-            return totalQuantityB - totalQuantityA;
-         });
-      }
+      const result = await Product.aggregate([
+         ...productSearchAggregate,
+         {
+            $limit: Number(limit)
+         },
+         {
+            $skip: (Number(page) - 1) * limit
+         }
+      ]);
+
+      const totalItem = await Product.aggregate([
+         ...productSearchAggregate,
+         { $count: 'totalProducts' }
+      ]);
 
       return {
          result,
          pagination: {
             page: Number(page),
             limit: Number(limit),
-            totalPage: Math.ceil(result.length / limit),
-            totalItem: result.length
+            totalPage: Math.ceil(Number(totalItem?.[0]?.totalProducts) / limit),
+            totalItem: Number(totalItem?.[0]?.totalProducts)
          }
       };
    }

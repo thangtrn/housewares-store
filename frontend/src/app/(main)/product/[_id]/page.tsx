@@ -5,7 +5,6 @@ import Breadcrumb from '../../_components/Breadcrumb';
 import EmblaCarousel from './_components/EmblaCarousel';
 import BadgeUI from '~/components/BadgeUI';
 import { Check, X, Store, ShoppingBag } from 'lucide-react';
-import { PRODUCT_DATA } from './data/product';
 import formatPrice from '~/utils/formatPrice';
 import Table from './_components/Table';
 import ActionGroup from './_components/ActionGroup';
@@ -22,11 +21,11 @@ const ProductDetailPage: React.FC<ServerProps> = async ({ params }) => {
    return (
       <>
          <Breadcrumb data={['Sản phẩm', 'Áo thun']} className='mb-4' />
-         <section className='section-card mb-4 flex gap-4'>
-            <div className='flex basis-4/12 md:border-r md:border-[--gray-300-color] md:pr-4'>
+         <section className='section-card mb-4 flex flex-col gap-4 md:flex-row'>
+            <div className='flex md:basis-4/12 md:border-r md:border-[--gray-300-color] md:pr-4'>
                <EmblaCarousel slides={productData?.images?.map((item) => item.imageUrl) || []} />
             </div>
-            <div className='basis-8/12 space-y-2'>
+            <div className='space-y-2 md:basis-8/12'>
                <BadgeUI
                   text={productData.quantity > 0 ? 'Còn hàng' : 'Hết hàng'}
                   color={productData.quantity > 0 ? 'success' : 'danger'}
@@ -35,16 +34,16 @@ const ProductDetailPage: React.FC<ServerProps> = async ({ params }) => {
                   classNames={{ base: 'rounded-md' }}
                />
 
-               <h1 className='line-clamp-3 text-2xl font-medium'>{PRODUCT_DATA.title}</h1>
+               <h1 className='line-clamp-3 text-2xl font-medium'>{productData.name}</h1>
 
                <ul className='text-md flex items-center text-[#8b96a5]'>
                   <li className='flex items-center gap-1'>
                      <Store size={18} /> Còn {productData.quantity}
                   </li>
                   <div className='mx-3 h-4 w-[2px] bg-[--gray-300-color]' />
-                  {/* <li className='flex items-center gap-1'>
-                     <ShoppingBag size={18} /> Đã bán {PRODUCT_DATA.sold}
-                  </li> */}
+                  <li className='flex items-center gap-1'>
+                     <ShoppingBag size={18} /> Đã bán {productData.sold}
+                  </li>
                </ul>
 
                <h4 className='text-2xl font-medium text-[--red-color]'>
@@ -59,8 +58,8 @@ const ProductDetailPage: React.FC<ServerProps> = async ({ params }) => {
                </div>
             </div>
          </section>
-         <section className='flex gap-4'>
-            <div className='basis-9/12'>
+         <section className='flex flex-col gap-4 md:flex-row'>
+            <div className='md:basis-9/12'>
                <div className='section-card description-product'>
                   <h1 className='mb-2 text-xl font-medium'>Mô tả sản phẩm</h1>
                   {productData?.description ? (
@@ -71,7 +70,7 @@ const ProductDetailPage: React.FC<ServerProps> = async ({ params }) => {
                   )}
                </div>
             </div>
-            <div className='basis-3/12'>
+            <div className='md:basis-3/12'>
                <div className='section-card'>
                   {/* sticky top-[calc(64px+16px)] */}
                   <h1 className='mb-2 text-xl font-medium'>Sản phẩm tương tự</h1>

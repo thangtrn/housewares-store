@@ -38,12 +38,12 @@ const InforForm = () => {
       <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
          <div>
             <h2 className='mb-2 text-lg font-medium'>Thông tin cá nhân</h2>
-            <div className='grid grid-cols-2 gap-3'>
+            <div className='grid gap-3 md:grid-cols-2'>
                <InputUI label='Họ và tên' {...register('fullname', { value: user?.fullname })} />
                <InputUI label='Số điện thoại' {...register('phone', { value: user?.phone })} />
                <InputUI
                   label='Địa chỉ'
-                  classNames={{ wrapper: 'col-span-2' }}
+                  classNames={{ wrapper: 'md:col-span-2' }}
                   {...register('address', { value: user?.address })}
                />
             </div>

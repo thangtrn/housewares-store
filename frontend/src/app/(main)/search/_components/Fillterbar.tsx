@@ -45,9 +45,8 @@ const Fillterbar = () => {
    const pathname = usePathname();
    const searchParams = useSearchParams();
    const [filter, setFilter] = useState({
-      name: searchParams.get('query') || '',
       page: Number(searchParams.get('page')) || 1,
-      limit: Number(searchParams.get('limit')) || 25,
+      // limit: Number(searchParams.get('limit')) || 25,
       fromPrice: Number(searchParams.get('fromPrice')) || 0,
       toPrice: Number(searchParams.get('toPrice')) || 20000000,
       sort: searchParams.get('sort') || 'createdAt'
@@ -56,12 +55,11 @@ const Fillterbar = () => {
    const handleFilter = () => {
       const params = new URLSearchParams(window.location.search);
 
-      params.set('query', filter.name);
       params.set('fromPrice', filter.fromPrice.toString());
       params.set('toPrice', filter.toPrice.toString());
       params.set('sort', filter.sort.toString());
       params.set('page', filter.page.toString());
-      params.set('limit', filter.limit.toString());
+      // params.set('limit', filter.limit.toString());
 
       const newUrl = `${pathname}?${params.toString()}`;
       window.history.pushState({}, '', newUrl);

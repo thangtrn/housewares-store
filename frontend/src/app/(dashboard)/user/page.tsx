@@ -13,7 +13,7 @@ const InfoPage = () => {
    const user = useStores((state) => state.user);
    return (
       <section className='section-card'>
-         <div className='flex'>
+         <div className='flex flex-col gap-4 md:flex-row'>
             <div className='flex basis-4/12 flex-col items-center justify-center gap-3'>
                <div className='w-3/5'>
                   <picture className='image-cover border-item aspect-square rounded-full'>

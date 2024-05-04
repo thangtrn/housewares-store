@@ -142,7 +142,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
          />
          <div>
             <label className='mb-2 block text-sm font-medium text-gray-900'>Hình ảnh</label>
-            <div className='flex gap-2'>
+            <div className='flex flex-wrap gap-2'>
                <InputFileUI
                   classNames={{
                      wrapper: 'w-fit'
@@ -188,7 +188,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
                />
             </div>
          </div>
-         <div className='grid grid-cols-3 gap-4'>
+         <div className='grid gap-4 md:grid-cols-3'>
             <SelectUI
                label='Danh mục sản phẩm'
                {...register('category', {
@@ -229,7 +229,7 @@ const FormHandler: React.FC<FormHandlerProps> = ({ onSubmit, formId, type, paylo
                error={errors?.price?.message}
             />
          </div>
-         <div className='grid grid-cols-4 gap-4'>
+         <div className='grid-col-2 grid gap-4 md:grid-cols-4'>
             <InputUI
                label='Kích thước'
                readOnly={type === 'view'}

@@ -162,7 +162,7 @@ const ProductPage = () => {
 
    return (
       <>
-         <section className='section-card mb-4 flex justify-between'>
+         <section className='section-card mb-4 flex flex-col justify-between gap-3 md:flex-row'>
             <div className='flex gap-3'>
                <ButtonUI
                   startContent={<RotateCcw size={16} />}
@@ -183,7 +183,7 @@ const ProductPage = () => {
                <Input
                   ref={filterRef}
                   className='max-w-80'
-                  placeholder='Tìm kiếm danh mục'
+                  placeholder='Tìm kiếm sản phẩm'
                   startContent={<Search size={20} />}
                />
                <Button

@@ -34,7 +34,7 @@ const BlockCategoryGroup: React.FC<BlockCategoryGroupProps> = ({
    categoryItems
 }) => {
    return (
-      <section className='section flex overflow-hidden'>
+      <section className='section flex flex-col overflow-hidden md:flex-row'>
          <div className='relative flex aspect-square basis-3/12 items-center justify-center'>
             <picture className='image-cover absolute inset-0'>
                <Image width={600} height={600} src={thumbnail} alt='' />

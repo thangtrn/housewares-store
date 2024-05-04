@@ -132,7 +132,7 @@ const AccountsPage = () => {
 
    return (
       <>
-         <div className='section-card mb-4 flex justify-between'>
+         <section className='section-card mb-4 flex flex-col justify-between gap-3 md:flex-row'>
             <div className='flex gap-3'>
                <ButtonUI
                   startContent={<RotateCcw size={16} />}
@@ -167,7 +167,7 @@ const AccountsPage = () => {
                   <Search size={16} />
                </Button>
             </div>
-         </div>
+         </section>
          <Table
             aria-label='Category table'
             isHeaderSticky

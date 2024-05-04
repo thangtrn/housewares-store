@@ -55,7 +55,7 @@ const SearchBox = () => {
    const hide = () => setVisible(false);
 
    return (
-      <div className='relative w-full max-w-lg'>
+      <div className='relative hidden w-full max-w-lg md:block'>
          <form className='flex' onSubmit={handleSearch}>
             <input
                onFocus={show}

@@ -23,7 +23,7 @@ const HomePage = async () => {
             />
 
             {/* CAROUSEL */}
-            <div className='min-h-[22.5rem] basis-9/12 pr-4'>
+            <div className='pl-4 pr-4 md:basis-9/12 md:pl-0'>
                <EmblaCarousel slides={SLIDES_IMAGE_URL} />
             </div>
          </section>

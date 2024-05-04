@@ -158,7 +158,7 @@ const CategoryPage = () => {
 
    return (
       <>
-         <div className='section-card mb-4 flex justify-between'>
+         <div className='section-card mb-4 flex flex-col justify-between gap-3 md:flex-row'>
             <div className='flex gap-3'>
                <ButtonUI
                   startContent={<RotateCcw size={16} />}

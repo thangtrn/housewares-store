@@ -116,7 +116,7 @@ const OrderPage = () => {
                            </div>
                         }
                         subtitle={
-                           <div className='mt-3 grid grid-cols-2 pl-2'>
+                           <div className='mt-3 grid gap-1 pl-2 md:grid-cols-2'>
                               <ul className='space-y-1'>
                                  <li>
                                     <span className='font-bold'>Mã đơn hàng:</span> {item?._id}
@@ -151,7 +151,7 @@ const OrderPage = () => {
                         }
                      >
                         <div className='space-y-4 p-1'>
-                           <div className='flex items-end justify-between'>
+                           <div className='flex flex-col items-end justify-between gap-2 md:flex-row'>
                               <Select
                                  size='sm'
                                  variant='flat'

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 import tw from '~/lib/tw';
 import useStores from '~/stores/stores';
+import { getRoleText } from '~/utils/rolesState';
 
 export interface SidebarItemProps {
    href: string;
@@ -60,7 +61,7 @@ const adminSidebar = (role: string) => {
    ];
 };
 
-const Sidebar = () => {
+const Sidebar = ({ showSidebar }: { showSidebar: boolean }) => {
    const user = useStores((state) => state.user);
 
    const items = [
@@ -79,7 +80,12 @@ const Sidebar = () => {
    ];
 
    return (
-      <aside className='fixed bottom-0 left-0 top-[--header-height] h-[calc(100vh-var(--header-height))] w-[--sidebar-width] overflow-y-auto border-r border-[--gray-300-color] bg-white'>
+      <aside
+         className={tw(
+            'transition-linear fixed bottom-0 left-0 top-[--header-height] z-10 h-[calc(100vh-var(--header-height))] w-[--sidebar-width] -translate-x-full overflow-y-auto border-r border-[--gray-300-color] bg-white lg:translate-x-0',
+            showSidebar && 'translate-x-0'
+         )}
+      >
          <div className='h-full overflow-y-auto px-3 py-4'>
             <nav className='flex flex-col items-center gap-2'>
                <picture className='image-cover border-item h-16 w-16 rounded-full'>
@@ -92,9 +98,11 @@ const Sidebar = () => {
                </picture>
                <div className='cursor-default text-center'>
                   <h3 className='hover:text-primary transition-ease line-clamp-2 text-base font-medium'>
-                     Admin
+                     {user?.fullname}
                   </h3>
-                  <span className='block text-xs text-[--gray-600-color]'>Admin</span>
+                  <span className='block text-xs text-[--gray-600-color]'>
+                     {getRoleText(user?.role as string)}
+                  </span>
                </div>
             </nav>
             <hr className='my-3 border-dashed border-[--gray-300-color]' />

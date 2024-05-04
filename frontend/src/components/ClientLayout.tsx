@@ -28,11 +28,14 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
    }, [data]);
 
    useEffect(() => {
-      if ((pathname.includes('/user') || pathname.includes('/cart')) && !data) {
+      if (isFetched && pathname.includes('/user') && !data) {
+         router.push('/');
+      }
+      if (isFetched && pathname.includes('/cart') && !data) {
          router.push('/');
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [data, pathname]);
+   }, [data, pathname, isFetched]);
 
    return (
       <>

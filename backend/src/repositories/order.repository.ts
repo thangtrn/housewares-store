@@ -1,4 +1,6 @@
 import Order from '~/models/order.model';
+import Product from '~/models/product.model';
+import { OrderStatus } from '~/types/orderStatus';
 import filterUndefinedOrNullFields from '~/utils/filterUndefineOrNull';
 import { NotFoundException } from '~/utils/response';
 
@@ -58,10 +60,25 @@ class OrderRepository {
    }
 
    async updateOrder({ _id, status }) {
-      const order = await Order.findByIdAndUpdate(_id, filterUndefinedOrNullFields({ status }));
+      const updatedOrder = await Order.findOneAndUpdate(
+         { _id },
+         filterUndefinedOrNullFields({ status }),
+         { new: true }
+      );
 
-      const result = await Order.findById(order._id).populate('items.product');
+      if (status === OrderStatus.PROCESSING) {
+         for (const item of updatedOrder.items) {
+            const product = await Product.findById(item.product);
 
+            if (product) {
+               const updatedQuantity = product.quantity - item.quantity;
+
+               await Product.findOneAndUpdate({ _id: item.product }, { quantity: updatedQuantity });
+            }
+         }
+      }
+
+      const result = await Order.findById(updatedOrder._id).populate('items.product');
       return result;
    }
 }

@@ -1,7 +1,7 @@
 'use client';
 import { Pagination } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import React from 'react';
 import ProductCard from '~/app/(main)/_components/ProductCard/ProductCard';
 import { fetchProductSearch } from '../../product/[_id]/_fetch';
@@ -12,6 +12,7 @@ import LoadingState from '~/components/LoadingState';
 import tw from '~/lib/tw';
 
 const ProductList: React.FC = () => {
+   const pathname = usePathname();
    const searchParams = useSearchParams();
    const filter = {
       name: searchParams.get('query') || '',
@@ -27,9 +28,13 @@ const ProductList: React.FC = () => {
       queryFn: () => fetchProductSearch(filter)
    });
 
-   // console.log(data);
-
-   const handleChangePage = (page) => {};
+   const handleChangePage = (page) => {
+      const params = new URLSearchParams(window.location.search);
+      params.set('page', page);
+      params.set('limit', filter.limit.toString());
+      const newUrl = `${pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+   };
 
    return (
       <>
@@ -46,7 +51,7 @@ const ProductList: React.FC = () => {
                <LoadingState />
             ) : (
                <>
-                  <ul className='grid grid-cols-5 gap-4'>
+                  <ul className='grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:lg:grid-cols-5'>
                      {data?.result.map((item) => <ProductCard key={item._id} {...item} />)}
                   </ul>
                   {/* PAGINATION */}
