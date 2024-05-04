@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import { Controller, Delete, Get, Post, Put } from '~/decorators';
+import { permission } from '~/middlewares/permission';
 import uploader from '~/middlewares/uploader';
 import CategoryRepository from '~/repositories/category.repository';
 import ImageRepository from '~/repositories/image.repository';
 import { CloudImage } from '~/types/image';
+import { Roles } from '~/types/roles';
 import OkResponse from '~/utils/response/response';
 
 @Controller('/category')
@@ -25,7 +27,7 @@ class CategoryController {
       });
    }
 
-   @Post('/', uploader.single('image'))
+   @Post('/', permission(Roles.ADMIN), uploader.single('image'))
    async createCagetory(req: Request, res: Response) {
       const name = req.body.name;
       const image: CloudImage = req.file;
@@ -40,7 +42,7 @@ class CategoryController {
       return OkResponse(res, { metadata: categoryResult });
    }
 
-   @Put('/', uploader.single('image'))
+   @Put('/', permission(Roles.ADMIN), uploader.single('image'))
    async updateCategory(req: Request, res: Response) {
       const { _id, name } = req.body;
       const image: CloudImage = req.file;
@@ -56,7 +58,7 @@ class CategoryController {
       return OkResponse(res, { metadata: categoryResult });
    }
 
-   @Delete('/:id')
+   @Delete('/:id', permission(Roles.ADMIN))
    async deleteCategory(req: Request, res: Response) {
       const _id = req.params.id;
 

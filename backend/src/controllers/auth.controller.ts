@@ -21,7 +21,7 @@ class AuthController {
       return OkResponse(res, { metadata: result });
    }
 
-   @Post('/change-password')
+   @Post('/change-password', permission())
    async changePassword(req: Request, res: Response) {
       const { username, password } = req.body;
       const result = await this.authRepo.changePassword({ username, password });

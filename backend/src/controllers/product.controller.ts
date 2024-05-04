@@ -6,6 +6,8 @@ import ImageRepository from '~/repositories/image.repository';
 import OkResponse from '~/utils/response/response';
 import ProductRepository from '~/repositories/product.repository';
 import { BadRequestException } from '~/utils/response';
+import { permission } from '~/middlewares/permission';
+import { Roles } from '~/types/roles';
 
 @Controller('/products')
 class ProductController {
@@ -50,7 +52,7 @@ class ProductController {
       return OkResponse(res, { metadata: result });
    }
 
-   @Post('/', uploader.array('image'))
+   @Post('/', permission(Roles.ADMIN), uploader.array('image'))
    async createProduct(req: Request, res: Response) {
       const { name, category, price, quantity, detail, description } = req.body;
       const file = req.files as CloudImage[];
@@ -73,7 +75,7 @@ class ProductController {
       return OkResponse(res, { metadata: product });
    }
 
-   @Put('/')
+   @Put('/', permission(Roles.ADMIN))
    async updateProduct(req: Request, res: Response) {
       const { _id, name, category, price, quantity, detail, description } = req.body;
 
@@ -90,7 +92,7 @@ class ProductController {
       return OkResponse(res, { metadata: product });
    }
 
-   @Delete('/:id')
+   @Delete('/:id', permission(Roles.ADMIN))
    async deleteProduct(req: Request, res: Response) {
       const _id = req.params.id;
       const result = await this.productRepo.deleteProduct(_id);
