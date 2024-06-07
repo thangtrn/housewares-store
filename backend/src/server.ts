@@ -55,6 +55,7 @@ class App {
       this.app.use(cookieParser());
       this.app.use(helmet());
       this.app.use(compression());
+      this.app.set('trust proxy', 1);
 
       const store = new this.MongoDBStore({
          uri: MONGOOSE_URI,
@@ -67,10 +68,13 @@ class App {
             secret: SESSION_KEY,
             resave: false,
             saveUninitialized: false,
+            proxy: true,
             cookie: {
                maxAge: 7 * 24 * 60 * 60 * 1000, // 1 tuần
+               path: '/',
+               secure: true,
                httpOnly: true,
-               path: '/'
+               sameSite: 'none'
             }
          })
       );
